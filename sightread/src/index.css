@@ -1,0 +1,317 @@
+@import 'tailwindcss';
+
+/* ── Sightread tokens: ink-dark code world, warm-paper annotation world ──── */
+:root {
+  --sr-ink: #101623;
+  --sr-panel: #151d2d;
+  --sr-line: #232c40;
+  --sr-text: #e7ebf3;
+  --sr-muted: #939db1;
+  --sr-amber: #e9b44c;
+  --sr-paper: #f7f0e2;
+  --sr-paper-edge: #e4d9c2;
+  --sr-paper-ink: #2c2417;
+  --sr-paper-muted: #7a6b50;
+  --sr-teal: #35b58f;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--sr-ink);
+  color: var(--sr-text);
+  font-family: 'Literata', ui-sans-serif, system-ui, sans-serif;
+}
+
+.sr-app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+/* ── header ── */
+.sr-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 18px;
+}
+.sr-wordmark {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.sr-tagline {
+  margin-left: 10px;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--sr-muted);
+}
+.sr-levels {
+  display: flex;
+  gap: 4px;
+  background: var(--sr-panel);
+  border: 1px solid var(--sr-line);
+  border-radius: 999px;
+  padding: 3px;
+}
+.sr-level {
+  border: 0;
+  background: transparent;
+  color: var(--sr-muted);
+  font: inherit;
+  font-size: 12.5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.sr-level-active {
+  background: var(--sr-amber);
+  color: #201703;
+  font-weight: 600;
+}
+
+/* ── toolbar ── */
+.sr-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.sr-hint {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sr-muted);
+}
+.sr-hint-underline {
+  border-bottom: 2px dashed color-mix(in srgb, var(--sr-amber) 65%, transparent);
+  color: var(--sr-text);
+}
+.sr-toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+.sr-btn {
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--sr-line);
+  background: var(--sr-panel);
+  color: var(--sr-text);
+  cursor: pointer;
+}
+.sr-btn:hover {
+  border-color: var(--sr-muted);
+}
+.sr-btn-primary {
+  background: var(--sr-teal);
+  border-color: var(--sr-teal);
+  color: #08251c;
+  font-weight: 600;
+}
+.sr-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ── paste panel ── */
+.sr-paste {
+  margin-bottom: 12px;
+}
+.sr-paste-input {
+  width: 100%;
+  min-height: 160px;
+  box-sizing: border-box;
+  background: var(--sr-panel);
+  border: 1px solid var(--sr-line);
+  border-radius: 10px;
+  color: var(--sr-text);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 13px;
+  padding: 12px;
+  resize: vertical;
+}
+.sr-paste-input:focus {
+  outline: 2px solid var(--sr-teal);
+  outline-offset: 1px;
+}
+.sr-paste-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ── reader ── */
+.sr-main {
+  position: relative;
+}
+.sr-reader {
+  position: relative;
+  background: var(--sr-panel);
+  border: 1px solid var(--sr-line);
+  border-radius: 14px;
+  overflow: hidden;
+  min-height: 200px;
+}
+.sr-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--sr-muted);
+  pointer-events: none;
+}
+
+/* The signature: everything underlined is askable. */
+.sr-tap {
+  border-bottom: 1.5px dashed color-mix(in srgb, var(--sr-amber) 55%, transparent);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+.sr-tap:hover {
+  background: color-mix(in srgb, var(--sr-amber) 16%, transparent);
+}
+
+/* ── the margin-note card ── */
+.sr-popover {
+  z-index: 30;
+  width: 340px;
+  max-width: calc(100% - 16px);
+}
+.sr-sheet {
+  position: fixed;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 8px 8px;
+}
+.sr-card {
+  position: relative;
+  background: var(--sr-paper);
+  color: var(--sr-paper-ink);
+  border: 1px solid var(--sr-paper-edge);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(6, 10, 20, 0.5);
+  padding: 16px 18px 14px;
+  font-family: 'Literata', Georgia, serif;
+}
+.sr-sheet .sr-card {
+  border-radius: 16px 16px 12px 12px;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+.sr-card-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--sr-paper-muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+.sr-card-eyebrow {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sr-paper-muted);
+  margin-bottom: 4px;
+}
+.sr-card-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.sr-card-title mark {
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--sr-amber) 55%, transparent) 0 45%,
+    transparent 45%
+  );
+  color: inherit;
+  padding: 0 2px;
+}
+.sr-card-body {
+  margin: 0 0 10px;
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.sr-card-body code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.88em;
+  background: color-mix(in srgb, var(--sr-paper-ink) 8%, transparent);
+  border-radius: 4px;
+  padding: 0 3px;
+}
+.sr-card-example {
+  margin: 0 0 10px;
+  background: var(--sr-ink);
+  color: var(--sr-text);
+  border-radius: 8px;
+  padding: 10px 12px;
+  overflow-x: auto;
+}
+.sr-card-example code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre;
+}
+.sr-card-gotcha {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--sr-paper-muted);
+  border-top: 1px solid var(--sr-paper-edge);
+  padding-top: 8px;
+}
+.sr-card-gotcha span {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a3572a;
+  margin-right: 6px;
+}
+.sr-card-link {
+  font: inherit;
+  font-size: 13px;
+  border: 0;
+  background: transparent;
+  color: #1c6e57;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── footer ── */
+.sr-footer {
+  margin-top: 14px;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--sr-muted);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-tap {
+    transition: none;
+  }
+}
