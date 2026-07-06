@@ -1,6 +1,7 @@
 import Pancake, { type PancakeIndex } from 'pancake-wasm/web';
 import type { Concept } from './types';
 import { embedText } from './embedding';
+import { createTrustedAliasT1Search } from './t1Aliases';
 
 interface T1ManifestConfig {
   embedding_model: { id: string; revision: string; dim: number; normalize: boolean } | null;
@@ -19,13 +20,6 @@ export interface T1Search {
 
 class DisabledT1Search implements T1Search {
   enabled = false;
-  search(): T1Hit | null {
-    return null;
-  }
-}
-
-class MissOnlyT1Search implements T1Search {
-  enabled = true;
   search(): T1Hit | null {
     return null;
   }
@@ -52,6 +46,21 @@ class PancakeT1Search implements T1Search {
 
     const concept = this.conceptsByOrdinal[hit.id];
     return concept ? { concept, score } : null;
+  }
+}
+
+class TrustedAliasThenPancakeT1Search implements T1Search {
+  enabled = true;
+  private aliases: T1Search;
+  private pancake: PancakeT1Search;
+
+  constructor(aliases: T1Search, pancake: PancakeT1Search) {
+    this.aliases = aliases;
+    this.pancake = pancake;
+  }
+
+  search(query: string): T1Hit | null {
+    return this.aliases.search(query) ?? this.pancake.search(query);
   }
 }
 
@@ -82,8 +91,11 @@ export async function loadT1Search(
 
   if (manifest.embedding_model.id === 'sightread-hash-embedding-v0') {
     index.dispose();
-    return new MissOnlyT1Search();
+    return createTrustedAliasT1Search(conceptsByOrdinal);
   }
 
-  return new PancakeT1Search(index, conceptsByOrdinal, manifest.t1_threshold);
+  return new TrustedAliasThenPancakeT1Search(
+    createTrustedAliasT1Search(conceptsByOrdinal),
+    new PancakeT1Search(index, conceptsByOrdinal, manifest.t1_threshold),
+  );
 }

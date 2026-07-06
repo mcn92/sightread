@@ -9,6 +9,7 @@ import { initPython, parsePython } from '../parse/parser';
 import { ResolverEngine, type MatchIndex } from './engine';
 import { PY_CONCEPTS } from './concepts';
 import { PY_CONFIG } from './langConfig';
+import { createTrustedAliasT1Search } from './t1Aliases';
 import type { Language } from 'web-tree-sitter';
 
 const ROOT = process.cwd();
@@ -110,6 +111,42 @@ describe('resolution (spec §6.2)', () => {
     if (card?.kind === 'lexical') {
       expect(card.text).toBe('count');
       expect(card.definitionLine).toBe(4);
+    }
+  });
+
+  it('uses trusted T1 aliases for obvious unbound builtin misspellings', () => {
+    const code = 'pritn("hello")';
+    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, createTrustedAliasT1Search(PY_CONCEPTS));
+    const card = t1Engine.index(parsePython(code)).resolveAt(0, 'novice');
+    expect(card?.kind).toBe('concept');
+    if (card?.kind === 'concept') {
+      expect(card.concept.id).toBe('py:builtin:print');
+      expect(card.tier).toBe('t1_hit');
+    }
+  });
+
+  it('does not guess unknown local names through trusted T1 aliases', () => {
+    const code = `totl = 0
+items = [1, 2, 3]
+totl += items[0]
+`;
+    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, createTrustedAliasT1Search(PY_CONCEPTS));
+    const localIndex = t1Engine.index(parsePython(code));
+
+    const totalCard = localIndex.resolveAt(code.indexOf('totl +='), 'novice');
+    expect(totalCard?.kind).toBe('lexical');
+    if (totalCard?.kind === 'lexical') {
+      expect(totalCard.text).toBe('totl');
+      expect(totalCard.definitionLine).toBe(1);
+      expect(totalCard.tier).toBe('t1_miss');
+    }
+
+    const itemsCard = localIndex.resolveAt(code.indexOf('items[0]'), 'novice');
+    expect(itemsCard?.kind).toBe('lexical');
+    if (itemsCard?.kind === 'lexical') {
+      expect(itemsCard.text).toBe('items');
+      expect(itemsCard.definitionLine).toBe(2);
+      expect(itemsCard.tier).toBe('t1_miss');
     }
   });
 
