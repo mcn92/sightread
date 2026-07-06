@@ -1,0 +1,48 @@
+{
+  "id": "py:builtin:booleans",
+  "names": [
+    "True / False"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(true) @target",
+      "priority": 45
+    },
+    {
+      "query": "(false) @target",
+      "priority": 45
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "The two truth values. Comparisons produce them, and if-statements consume them. Capitalized — true and false are errors.",
+      "example": {
+        "code": "flag = 3 > 2\nprint(flag)        # True\nprint(True + True) # 2",
+        "expected_output": null
+      },
+      "gotcha": "They must be capitalized: \"true\" is just an undefined name."
+    },
+    "learning": {
+      "body": "The bool constants. Other values have truthiness too: empty containers, 0, and None count as false in conditions.",
+      "example": {
+        "code": "flag = 3 > 2\nprint(flag)        # True\nprint(True + True) # 2",
+        "expected_output": null
+      },
+      "gotcha": "They must be capitalized: \"true\" is just an undefined name."
+    },
+    "comfortable": {
+      "body": "bool subclasses int (True == 1), which enables sum(predicate(x) for x in xs) counting — and the occasional surprise.",
+      "example": {
+        "code": "flag = 3 > 2\nprint(flag)        # True\nprint(True + True) # 2",
+        "expected_output": null
+      },
+      "gotcha": "They must be capitalized: \"true\" is just an undefined name."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

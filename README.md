@@ -10,6 +10,7 @@ the proof-of-interaction build — client-only, no backend, no accounts, no anal
 npm install
 npm run dev        # http://localhost:5173
 npm test           # resolver fixture tests (node)
+npm run pack:build # compile packs/py/src into packs/py/build/v0
 npm run build      # production build in dist/
 ```
 
@@ -21,6 +22,9 @@ npm run build      # production build in dist/
 | `src/parse/` | web-tree-sitter lifecycle (wasm sources injectable: browser + node tests) |
 | `src/resolve/` | T0 engine: selector compilation, match index, §6.2 resolution, guards, ~35-concept corpus |
 | `src/app/` | shell, level control, paste panel, zustand store |
+| `packs/py/src/` | M1 pack-source skeleton migrated from the M0 hardcoded corpus |
+| `public/packs/py/v0/` | generated static pack served to the browser runtime |
+| `tools/compile-pack.mjs` | dependency-free pack compiler for the current YAML-compatible source subset |
 | `public/*.wasm` | tree-sitter core + Python grammar (official `tree-sitter-python` npm wasm) |
 | `docs/` | design doc, metrics & decision spec, pack format & selector spec |
 
@@ -32,8 +36,14 @@ npm run build      # production build in dist/
 - Guards implemented: `not_locally_bound` (with the honest shadow card per I5),
   `is_callee`, `inside`, `not_inside`. Binding analysis is single-file best-effort
   by design (N2).
-- Concepts are hardcoded in `src/resolve/concepts.ts` for M0. Ids already follow
-  the permanent-id rules (I14) so future event logs survive the M1 pack migration.
+- The browser runtime loads the generated Python pack from `public/packs/py/v0`.
+  The old hardcoded `src/resolve/concepts.ts` corpus remains only as the M0
+  migration source and resolver test fixture for now.
+- The current corpus has also been migrated into `packs/py/src/concepts/**/*.yaml`.
+  Rebuild generated pack artifacts with `npm run pack:build`; this writes ignored
+  staging output to `packs/py/build/v0` and served runtime output to
+  `public/packs/py/v0`. Rerun the one-time migration from the old runtime corpus
+  with `npm run pack:migrate:m0`.
 - Level gates work end to end: try tapping the `=` in an assignment at
   "New to this" vs "Comfortable".
 

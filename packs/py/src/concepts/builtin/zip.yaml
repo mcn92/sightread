@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:zip",
+  "names": [
+    "zip()",
+    "zip"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"zip\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"zip\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Walks two (or more) collections side by side, pairing up their items: first with first, second with second.",
+      "example": {
+        "code": "names = [\"Ada\", \"Alan\"]\nages = [36, 41]\nfor name, age in zip(names, ages):\n    print(name, age)",
+        "expected_output": null
+      },
+      "gotcha": "zip silently stops at the shortest input — mismatched lengths lose data without warning."
+    },
+    "learning": {
+      "body": "Yields tuples of matched elements and stops at the shortest input. zip(*pairs) runs it in reverse to unzip.",
+      "example": {
+        "code": "names = [\"Ada\", \"Alan\"]\nages = [36, 41]\nfor name, age in zip(names, ages):\n    print(name, age)",
+        "expected_output": null
+      },
+      "gotcha": "zip silently stops at the shortest input — mismatched lengths lose data without warning."
+    },
+    "comfortable": {
+      "body": "Lazy parallel iterator; strict=True (3.10+) raises on unequal lengths instead of silently truncating.",
+      "example": {
+        "code": "names = [\"Ada\", \"Alan\"]\nages = [36, 41]\nfor name, age in zip(names, ages):\n    print(name, age)",
+        "expected_output": null
+      },
+      "gotcha": "zip silently stops at the shortest input — mismatched lengths lose data without warning."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

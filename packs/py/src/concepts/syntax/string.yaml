@@ -1,0 +1,46 @@
+{
+  "id": "py:syntax:string",
+  "names": [
+    "string literal"
+  ],
+  "category": "syntax",
+  "level_gate": {
+    "max": "novice"
+  },
+  "selectors": [
+    {
+      "query": "(string) @target",
+      "priority": 18
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Text in quotes. Single and double quotes mean the same thing; triple quotes let the text span multiple lines.",
+      "example": {
+        "code": "message = \"hello\"\npoem = \"\"\"roses are red,\nviolets are blue\"\"\"",
+        "expected_output": null
+      },
+      "gotcha": "Strings can't be changed in place — every \"modification\" builds a new string."
+    },
+    "learning": {
+      "body": "Text in quotes; single, double, and triple-quoted forms are equivalent.",
+      "example": {
+        "code": "message = \"hello\"\npoem = \"\"\"roses are red,\nviolets are blue\"\"\"",
+        "expected_output": null
+      },
+      "gotcha": "Strings can't be changed in place — every \"modification\" builds a new string."
+    },
+    "comfortable": {
+      "body": "String literal.",
+      "example": {
+        "code": "message = \"hello\"\npoem = \"\"\"roses are red,\nviolets are blue\"\"\"",
+        "expected_output": null
+      },
+      "gotcha": "Strings can't be changed in place — every \"modification\" builds a new string."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:range",
+  "names": [
+    "range()",
+    "range"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"range\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"range\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Produces a sequence of counting numbers, most often to run a loop N times. range(3) gives 0, 1, 2 — it stops before the number you give it.",
+      "example": {
+        "code": "for i in range(3):\n    print(i)   # 0, 1, 2",
+        "expected_output": null
+      },
+      "gotcha": "The stop value is never produced: range(1, 5) ends at 4."
+    },
+    "learning": {
+      "body": "range(start, stop, step) counts from start up to (but not including) stop. It's lazy — wrap it in list() to see the numbers.",
+      "example": {
+        "code": "for i in range(3):\n    print(i)   # 0, 1, 2",
+        "expected_output": null
+      },
+      "gotcha": "The stop value is never produced: range(1, 5) ends at 4."
+    },
+    "comfortable": {
+      "body": "A lazy immutable sequence with O(1) membership tests and slicing; not a generator — it can be iterated repeatedly.",
+      "example": {
+        "code": "for i in range(3):\n    print(i)   # 0, 1, 2",
+        "expected_output": null
+      },
+      "gotcha": "The stop value is never produced: range(1, 5) ends at 4."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

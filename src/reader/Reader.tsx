@@ -7,10 +7,9 @@ import { oneDarkHighlightStyle } from '@codemirror/theme-one-dark';
 import type { Language } from 'web-tree-sitter';
 import { initPython, parsePython } from '../parse/parser';
 import { ResolverEngine, type MatchIndex } from '../resolve/engine';
-import { PY_CONCEPTS } from '../resolve/concepts';
-import { PY_CONFIG } from '../resolve/langConfig';
 import type { Range, ResolvedCard } from '../resolve/types';
 import { useAppStore } from '../app/store';
+import { loadPythonPack } from '../packs/loadPack';
 import { Card } from './Card';
 
 // ── decorations: one mark class over every tappable range (spec §6.6) ──────
@@ -55,13 +54,15 @@ const readerTheme = EditorView.theme(
 let enginePromise: Promise<{ language: Language; engine: ResolverEngine }> | null = null;
 function getEngine() {
   if (!enginePromise) {
-    enginePromise = initPython({
-      core: '/web-tree-sitter.wasm',
-      grammar: '/tree-sitter-python.wasm',
-    }).then((language) => ({
-      language,
-      engine: new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG),
-    }));
+    enginePromise = loadPythonPack().then((pack) =>
+      initPython({
+        core: '/web-tree-sitter.wasm',
+        grammar: pack.grammar,
+      }).then((language) => ({
+        language,
+        engine: new ResolverEngine(language, pack.concepts, pack.config),
+      })),
+    );
   }
   return enginePromise;
 }

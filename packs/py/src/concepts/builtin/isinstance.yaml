@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:isinstance",
+  "names": [
+    "isinstance()",
+    "isinstance"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"isinstance\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"isinstance\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Asks whether a value is a certain type: isinstance(3, int) is True.",
+      "example": {
+        "code": "print(isinstance(3.5, (int, float)))  # True",
+        "expected_output": null
+      },
+      "gotcha": "bool is a subclass of int — isinstance(True, int) is True, which surprises everyone once."
+    },
+    "learning": {
+      "body": "Type check that respects inheritance — an instance of a subclass counts. Accepts a tuple of types: isinstance(x, (int, float)).",
+      "example": {
+        "code": "print(isinstance(3.5, (int, float)))  # True",
+        "expected_output": null
+      },
+      "gotcha": "bool is a subclass of int — isinstance(True, int) is True, which surprises everyone once."
+    },
+    "comfortable": {
+      "body": "Prefer over type(x) == T for polymorphism; with abstract base classes it checks interfaces, not just ancestry.",
+      "example": {
+        "code": "print(isinstance(3.5, (int, float)))  # True",
+        "expected_output": null
+      },
+      "gotcha": "bool is a subclass of int — isinstance(True, int) is True, which surprises everyone once."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

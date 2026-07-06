@@ -1,0 +1,44 @@
+{
+  "id": "py:builtin:none",
+  "names": [
+    "None"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(none) @target",
+      "priority": 45
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "The \"nothing here\" value. Functions that don't return anything actually return None, and it's often used to mean \"no answer yet.\"",
+      "example": {
+        "code": "result = print(\"hi\")\nprint(result is None)  # True",
+        "expected_output": null
+      },
+      "gotcha": "\"if not x\" is True for 0 and \"\" too — use \"if x is None\" when None is what you mean."
+    },
+    "learning": {
+      "body": "The single null object. Test for it with \"is None\", not \"== None\". It's falsy, but so are 0 and \"\" — check identity when you specifically mean None.",
+      "example": {
+        "code": "result = print(\"hi\")\nprint(result is None)  # True",
+        "expected_output": null
+      },
+      "gotcha": "\"if not x\" is True for 0 and \"\" too — use \"if x is None\" when None is what you mean."
+    },
+    "comfortable": {
+      "body": "Singleton of NoneType; the conventional default-argument sentinel (def f(x=None)) precisely because of the mutable-default trap.",
+      "example": {
+        "code": "result = print(\"hi\")\nprint(result is None)  # True",
+        "expected_output": null
+      },
+      "gotcha": "\"if not x\" is True for 0 and \"\" too — use \"if x is None\" when None is what you mean."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:lambda",
+  "names": [
+    "lambda",
+    "anonymous function"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(lambda) @target",
+      "priority": 50
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "A tiny unnamed function written in one expression. \"lambda x: x * 2\" means the same as a def that takes x and returns x * 2.",
+      "example": {
+        "code": "words = [\"bb\", \"a\", \"ccc\"]\nwords.sort(key=lambda w: len(w))",
+        "expected_output": null
+      },
+      "gotcha": "No statements allowed inside — no assignments, no loops, just one expression."
+    },
+    "learning": {
+      "body": "An inline function limited to a single expression, usually passed straight into something like sorted(key=...) or map().",
+      "example": {
+        "code": "words = [\"bb\", \"a\", \"ccc\"]\nwords.sort(key=lambda w: len(w))",
+        "expected_output": null
+      },
+      "gotcha": "No statements allowed inside — no assignments, no loops, just one expression."
+    },
+    "comfortable": {
+      "body": "Single-expression closure. If it needs a name or a second line, make it a def.",
+      "example": {
+        "code": "words = [\"bb\", \"a\", \"ccc\"]\nwords.sort(key=lambda w: len(w))",
+        "expected_output": null
+      },
+      "gotcha": "No statements allowed inside — no assignments, no loops, just one expression."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:class-def",
+  "names": [
+    "class definition",
+    "class"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(class_definition) @target",
+      "priority": 30
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "class defines a blueprint for objects: what data they carry and what they can do. Calling the class like a function — Dog(\"Rex\") — builds a new object from the blueprint.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return f\"{self.name} says woof\"",
+        "expected_output": null
+      },
+      "gotcha": "Attributes assigned in the class body (not in __init__) are shared by every instance."
+    },
+    "learning": {
+      "body": "Bundles data (attributes) with behavior (methods). Parentheses after the name declare a parent class to inherit from.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return f\"{self.name} says woof\"",
+        "expected_output": null
+      },
+      "gotcha": "Attributes assigned in the class body (not in __init__) are shared by every instance."
+    },
+    "comfortable": {
+      "body": "The class body executes top-to-bottom at definition time in its own namespace; assignments there become class attributes shared by all instances.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return f\"{self.name} says woof\"",
+        "expected_output": null
+      },
+      "gotcha": "Attributes assigned in the class body (not in __init__) are shared by every instance."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

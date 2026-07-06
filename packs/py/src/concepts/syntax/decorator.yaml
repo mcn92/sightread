@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:decorator",
+  "names": [
+    "decorator",
+    "@something"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(decorator) @target",
+      "priority": 60
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "The @name line above a function wraps that function in extra behavior — the function below gets handed to the decorator, which can change or extend what it does.",
+      "example": {
+        "code": "@app.route(\"/hello\")\ndef hello():\n    return \"hi\"",
+        "expected_output": null
+      },
+      "gotcha": "Decorators run at definition time, not call time — side effects happen on import."
+    },
+    "learning": {
+      "body": "Syntax sugar: \"@deco\" above \"def f\" means f = deco(f). The decorator receives the function and returns a (usually enhanced) replacement.",
+      "example": {
+        "code": "@app.route(\"/hello\")\ndef hello():\n    return \"hi\"",
+        "expected_output": null
+      },
+      "gotcha": "Decorators run at definition time, not call time — side effects happen on import."
+    },
+    "comfortable": {
+      "body": "Function transformation applied at definition time. Decorators with arguments are factories: @deco(arg) calls deco(arg) first, then applies the result.",
+      "example": {
+        "code": "@app.route(\"/hello\")\ndef hello():\n    return \"hi\"",
+        "expected_output": null
+      },
+      "gotcha": "Decorators run at definition time, not call time — side effects happen on import."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

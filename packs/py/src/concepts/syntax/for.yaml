@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:for",
+  "names": [
+    "for loop",
+    "for ... in"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(for_statement) @target",
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Repeats the indented block once for each item in a collection, putting the current item in the loop variable each time around.",
+      "example": {
+        "code": "for letter in \"abc\":\n    print(letter)",
+        "expected_output": null
+      },
+      "gotcha": "Looping over a dict gives you its keys, not key–value pairs — use .items() for both."
+    },
+    "learning": {
+      "body": "Iterates over anything iterable — lists, strings, files, dicts (their keys). Use enumerate() when you also need the index, and range() for plain counting.",
+      "example": {
+        "code": "for letter in \"abc\":\n    print(letter)",
+        "expected_output": null
+      },
+      "gotcha": "Looping over a dict gives you its keys, not key–value pairs — use .items() for both."
+    },
+    "comfortable": {
+      "body": "Drives the iterator protocol (iter/next). The optional else clause runs only if the loop completed without break.",
+      "example": {
+        "code": "for letter in \"abc\":\n    print(letter)",
+        "expected_output": null
+      },
+      "gotcha": "Looping over a dict gives you its keys, not key–value pairs — use .items() for both."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

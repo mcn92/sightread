@@ -1,0 +1,49 @@
+{
+  "id": "py:syntax:kwargs",
+  "names": [
+    "**kwargs",
+    "keyword unpacking"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(dictionary_splat_pattern) @target",
+      "priority": 55
+    },
+    {
+      "query": "(dictionary_splat) @target",
+      "priority": 55
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "A double star collects extra name=value arguments into a dictionary (in a def), or spreads a dictionary out into name=value arguments (in a call).",
+      "example": {
+        "code": "def show(**kwargs):\n    for k, v in kwargs.items():\n        print(k, v)",
+        "expected_output": null
+      },
+      "gotcha": "Keys must be valid identifiers when unpacking into a call — {\"my-key\": 1} can't become a keyword argument."
+    },
+    "learning": {
+      "body": "def f(**kwargs) gathers unexpected keyword arguments into a dict; f(**options) unpacks a dict as keyword arguments. Often used to pass options through to another function.",
+      "example": {
+        "code": "def show(**kwargs):\n    for k, v in kwargs.items():\n        print(k, v)",
+        "expected_output": null
+      },
+      "gotcha": "Keys must be valid identifiers when unpacking into a call — {\"my-key\": 1} can't become a keyword argument."
+    },
+    "comfortable": {
+      "body": "Keyword packing/unpacking; also dict merging: {**a, **b} (last key wins). Order in signatures: positional, *args, keyword-only, **kwargs.",
+      "example": {
+        "code": "def show(**kwargs):\n    for k, v in kwargs.items():\n        print(k, v)",
+        "expected_output": null
+      },
+      "gotcha": "Keys must be valid identifiers when unpacking into a call — {\"my-key\": 1} can't become a keyword argument."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

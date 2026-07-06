@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:generator-expression",
+  "names": [
+    "generator expression",
+    "(x for x in ...)"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(generator_expression) @target",
+      "priority": 50
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Looks like a list comprehension with round brackets, but it doesn't build the whole list — it produces items one at a time, as they're asked for.",
+      "example": {
+        "code": "total = sum(n * n for n in range(1000))",
+        "expected_output": null
+      },
+      "gotcha": "A generator can be consumed only once; a second loop over it gets zero items."
+    },
+    "learning": {
+      "body": "A lazy comprehension: nothing is computed until something iterates over it. Great for big or infinite sequences because it uses almost no memory.",
+      "example": {
+        "code": "total = sum(n * n for n in range(1000))",
+        "expected_output": null
+      },
+      "gotcha": "A generator can be consumed only once; a second loop over it gets zero items."
+    },
+    "comfortable": {
+      "body": "Lazy single-pass iterator. Once consumed it's exhausted — iterate twice and the second pass sees nothing.",
+      "example": {
+        "code": "total = sum(n * n for n in range(1000))",
+        "expected_output": null
+      },
+      "gotcha": "A generator can be consumed only once; a second loop over it gets zero items."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

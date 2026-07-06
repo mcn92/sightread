@@ -1,0 +1,44 @@
+{
+  "id": "py:syntax:elif",
+  "names": [
+    "elif"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(elif_clause) @target",
+      "priority": 30
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Short for \"else if\" — another condition to try when the ones above it were false. Only the first true branch in the chain runs.",
+      "example": {
+        "code": "if score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelse:\n    grade = \"C\"",
+        "expected_output": null
+      },
+      "gotcha": "Exactly one branch runs — even if several conditions would have been true."
+    },
+    "learning": {
+      "body": "Chains mutually exclusive conditions without nesting. Order matters: conditions are tested top to bottom and the rest are skipped after a hit.",
+      "example": {
+        "code": "if score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelse:\n    grade = \"C\"",
+        "expected_output": null
+      },
+      "gotcha": "Exactly one branch runs — even if several conditions would have been true."
+    },
+    "comfortable": {
+      "body": "Flat alternative to nested else/if; for many branches on one value, match/case may read better.",
+      "example": {
+        "code": "if score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelse:\n    grade = \"C\"",
+        "expected_output": null
+      },
+      "gotcha": "Exactly one branch runs — even if several conditions would have been true."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

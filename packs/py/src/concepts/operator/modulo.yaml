@@ -1,0 +1,44 @@
+{
+  "id": "py:operator:modulo",
+  "names": [
+    "% (modulo)"
+  ],
+  "category": "operator",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(binary_operator operator: \"%\" @target)",
+      "priority": 40
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Gives the remainder after division: 7 % 2 is 1. Handy for \"is this number even?\" — n % 2 == 0.",
+      "example": {
+        "code": "print(7 % 2)   # 1\nprint(8 % 2)   # 0  (even)",
+        "expected_output": null
+      },
+      "gotcha": "Sign follows the divisor: -7 % 3 is 2, not -1 — different from many other languages."
+    },
+    "learning": {
+      "body": "Remainder operator; the result takes the sign of the divisor, so -7 % 3 is 2 in Python. Common for wrapping indexes and even/odd checks.",
+      "example": {
+        "code": "print(7 % 2)   # 1\nprint(8 % 2)   # 0  (even)",
+        "expected_output": null
+      },
+      "gotcha": "Sign follows the divisor: -7 % 3 is 2, not -1 — different from many other languages."
+    },
+    "comfortable": {
+      "body": "Modulo consistent with floor division. On strings it's legacy printf-style formatting — prefer f-strings.",
+      "example": {
+        "code": "print(7 % 2)   # 1\nprint(8 % 2)   # 0  (even)",
+        "expected_output": null
+      },
+      "gotcha": "Sign follows the divisor: -7 % 3 is 2, not -1 — different from many other languages."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

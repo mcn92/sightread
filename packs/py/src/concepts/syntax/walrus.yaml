@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:walrus",
+  "names": [
+    "walrus operator",
+    ":="
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(named_expression) @target",
+      "priority": 55
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "The := sign assigns a value and uses it in the same expression — handy for \"check something and keep the result\" in one step.",
+      "example": {
+        "code": "while (line := input()) != \"quit\":\n    print(line)",
+        "expected_output": null
+      },
+      "gotcha": "It's an expression, not a statement — a bare \"x := 5\" line is a syntax error without parentheses."
+    },
+    "learning": {
+      "body": "Assignment expression: \"if (n := len(items)) > 10:\" stores len(items) in n and tests it at once, so you don't compute it twice.",
+      "example": {
+        "code": "while (line := input()) != \"quit\":\n    print(line)",
+        "expected_output": null
+      },
+      "gotcha": "It's an expression, not a statement — a bare \"x := 5\" line is a syntax error without parentheses."
+    },
+    "comfortable": {
+      "body": "Expression-level binding (PEP 572). Best in while-conditions and comprehension filters; anywhere else it usually costs more readability than it saves.",
+      "example": {
+        "code": "while (line := input()) != \"quit\":\n    print(line)",
+        "expected_output": null
+      },
+      "gotcha": "It's an expression, not a statement — a bare \"x := 5\" line is a syntax error without parentheses."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

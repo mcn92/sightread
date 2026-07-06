@@ -1,0 +1,44 @@
+{
+  "id": "py:syntax:return",
+  "names": [
+    "return"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(return_statement) @target",
+      "priority": 20
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Ends the function immediately and sends a value back to whoever called it. Code after the return never runs.",
+      "example": {
+        "code": "def double(n):\n    return n * 2\n\nresult = double(4)  # 8",
+        "expected_output": null
+      },
+      "gotcha": "print shows a value; return gives it back. A function that only prints returns None."
+    },
+    "learning": {
+      "body": "Exits with a result; \"return\" with nothing (or falling off the end) returns None. Multiple values come back as a tuple: return a, b.",
+      "example": {
+        "code": "def double(n):\n    return n * 2\n\nresult = double(4)  # 8",
+        "expected_output": null
+      },
+      "gotcha": "print shows a value; return gives it back. A function that only prints returns None."
+    },
+    "comfortable": {
+      "body": "Immediate exit through any enclosing finally blocks (which still run). Distinguish from yield: return ends, yield pauses.",
+      "example": {
+        "code": "def double(n):\n    return n * 2\n\nresult = double(4)  # 8",
+        "expected_output": null
+      },
+      "gotcha": "print shows a value; return gives it back. A function that only prints returns None."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

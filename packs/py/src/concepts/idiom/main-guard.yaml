@@ -1,0 +1,45 @@
+{
+  "id": "py:idiom:main-guard",
+  "names": [
+    "the __main__ guard",
+    "if __name__ == \"__main__\""
+  ],
+  "category": "idiom",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(if_statement condition: (comparison_operator (identifier) @n (#eq? @n \"__name__\"))) @target",
+      "priority": 85
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "This line means \"only run the code below when this file is run directly.\" When the file is imported by another file, the code below is skipped.",
+      "example": {
+        "code": "def main():\n    print(\"running\")\n\nif __name__ == \"__main__\":\n    main()",
+        "expected_output": null
+      },
+      "gotcha": "Code above the guard still runs on import — only what's inside the if is protected."
+    },
+    "learning": {
+      "body": "Python sets the special variable __name__ to \"__main__\" when a file runs as the program, and to the module's name when it's imported. This check separates \"script behavior\" from \"library behavior.\"",
+      "example": {
+        "code": "def main():\n    print(\"running\")\n\nif __name__ == \"__main__\":\n    main()",
+        "expected_output": null
+      },
+      "gotcha": "Code above the guard still runs on import — only what's inside the if is protected."
+    },
+    "comfortable": {
+      "body": "The standard entry-point guard: run-time behavior lives here, importable definitions live above it. Keeps imports side-effect-free.",
+      "example": {
+        "code": "def main():\n    print(\"running\")\n\nif __name__ == \"__main__\":\n    main()",
+        "expected_output": null
+      },
+      "gotcha": "Code above the guard still runs on import — only what's inside the if is protected."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:open",
+  "names": [
+    "open()",
+    "open"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"open\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"open\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Opens a file so your program can read or write it. Almost always used with \"with\", which closes the file for you.",
+      "example": {
+        "code": "with open(\"notes.txt\") as f:\n    print(f.read())",
+        "expected_output": null
+      },
+      "gotcha": "Mode \"w\" truncates the file the moment it opens — before you've written anything."
+    },
+    "learning": {
+      "body": "Returns a file object; the mode string picks reading (\"r\"), writing (\"w\" — erases!), or appending (\"a\"). Pair with with for guaranteed cleanup.",
+      "example": {
+        "code": "with open(\"notes.txt\") as f:\n    print(f.read())",
+        "expected_output": null
+      },
+      "gotcha": "Mode \"w\" truncates the file the moment it opens — before you've written anything."
+    },
+    "comfortable": {
+      "body": "Text mode decodes via encoding= (pass it explicitly; the default is platform-dependent pre-3.15); \"b\" modes yield bytes.",
+      "example": {
+        "code": "with open(\"notes.txt\") as f:\n    print(f.read())",
+        "expected_output": null
+      },
+      "gotcha": "Mode \"w\" truncates the file the moment it opens — before you've written anything."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

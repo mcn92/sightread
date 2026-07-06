@@ -1,0 +1,44 @@
+{
+  "id": "py:syntax:from-import",
+  "names": [
+    "from ... import"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(import_from_statement) @target",
+      "priority": 30
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Pulls specific names out of a module so you can use them directly: after \"from math import sqrt\", you write sqrt(9) with no prefix.",
+      "example": {
+        "code": "from math import sqrt\nprint(sqrt(16))  # 4.0",
+        "expected_output": null
+      },
+      "gotcha": "\"from module import *\" makes it impossible to tell where a name came from — avoid it."
+    },
+    "learning": {
+      "body": "Imports the whole module but binds only the listed names locally. Clearer than import-star, which dumps everything into your namespace.",
+      "example": {
+        "code": "from math import sqrt\nprint(sqrt(16))  # 4.0",
+        "expected_output": null
+      },
+      "gotcha": "\"from module import *\" makes it impossible to tell where a name came from — avoid it."
+    },
+    "comfortable": {
+      "body": "Binds by value at import time: \"from config import DEBUG\" won't see later reassignments of config.DEBUG.",
+      "example": {
+        "code": "from math import sqrt\nprint(sqrt(16))  # 4.0",
+        "expected_output": null
+      },
+      "gotcha": "\"from module import *\" makes it impossible to tell where a name came from — avoid it."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

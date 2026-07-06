@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:list-comprehension",
+  "names": [
+    "list comprehension",
+    "[x for x in ...]"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(list_comprehension) @target",
+      "priority": 50
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "A one-line way to build a new list from an existing one. Read it inside-out: \"for n in numbers\" walks the list, and the part before \"for\" says what to keep.",
+      "example": {
+        "code": "numbers = [1, 2, 3]\ndoubled = [n * 2 for n in numbers]  # [2, 4, 6]",
+        "expected_output": null
+      },
+      "gotcha": "With parentheses instead of brackets you get a generator, not a list."
+    },
+    "learning": {
+      "body": "Builds a list by transforming (and optionally filtering, with a trailing \"if\") each element of an iterable. Equivalent to a for-loop that appends, but shorter and usually faster.",
+      "example": {
+        "code": "numbers = [1, 2, 3]\ndoubled = [n * 2 for n in numbers]  # [2, 4, 6]",
+        "expected_output": null
+      },
+      "gotcha": "With parentheses instead of brackets you get a generator, not a list."
+    },
+    "comfortable": {
+      "body": "Eager list construction from an iterable; add \"if\" clauses to filter. Prefer a plain loop once it stops fitting on one readable line.",
+      "example": {
+        "code": "numbers = [1, 2, 3]\ndoubled = [n * 2 for n in numbers]  # [2, 4, 6]",
+        "expected_output": null
+      },
+      "gotcha": "With parentheses instead of brackets you get a generator, not a list."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

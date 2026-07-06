@@ -1,0 +1,86 @@
+{
+  "lang": "py",
+  "display_name": "Python",
+  "promotion_stops": [
+    "expression_statement",
+    "return_statement",
+    "if_statement",
+    "elif_clause",
+    "for_statement",
+    "while_statement",
+    "with_statement",
+    "try_statement",
+    "function_definition",
+    "class_definition",
+    "decorated_definition",
+    "import_statement",
+    "import_from_statement",
+    "assert_statement",
+    "raise_statement",
+    "pass_statement",
+    "delete_statement",
+    "global_statement"
+  ],
+  "binding_nodes": [
+    {
+      "node": "assignment",
+      "name_field": "left"
+    },
+    {
+      "node": "augmented_assignment",
+      "name_field": "left"
+    },
+    {
+      "node": "named_expression",
+      "name_field": "name"
+    },
+    {
+      "node": "parameters",
+      "name_field": "*"
+    },
+    {
+      "node": "lambda_parameters",
+      "name_field": "*"
+    },
+    {
+      "node": "for_statement",
+      "name_field": "left"
+    },
+    {
+      "node": "import_statement",
+      "name_field": "*"
+    },
+    {
+      "node": "import_from_statement",
+      "name_field": "*"
+    },
+    {
+      "node": "with_item",
+      "name_field": "*"
+    },
+    {
+      "node": "except_clause",
+      "name_field": "*"
+    },
+    {
+      "node": "function_definition",
+      "name_field": "name"
+    },
+    {
+      "node": "class_definition",
+      "name_field": "name"
+    }
+  ],
+  "scope_nodes": [
+    "module",
+    "function_definition",
+    "lambda",
+    "class_definition"
+  ],
+  "comment_nodes": [
+    "comment"
+  ],
+  "string_nodes": [
+    "string"
+  ]
+}

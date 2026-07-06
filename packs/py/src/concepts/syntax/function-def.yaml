@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:function-def",
+  "names": [
+    "function definition",
+    "def"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(function_definition) @target",
+      "priority": 30
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "def creates a reusable named block of code. The names in parentheses are inputs; \"return\" sends a result back out. Nothing runs until the function is called.",
+      "example": {
+        "code": "def greet(name):\n    return f\"hello, {name}\"\n\nprint(greet(\"Ada\"))",
+        "expected_output": null
+      },
+      "gotcha": "Default values are evaluated once at definition — a mutable default like def f(x=[]) is shared across calls."
+    },
+    "learning": {
+      "body": "Defines a function object and binds it to the name. Parameters can have defaults (x=0); the body runs only on call, in its own local scope.",
+      "example": {
+        "code": "def greet(name):\n    return f\"hello, {name}\"\n\nprint(greet(\"Ada\"))",
+        "expected_output": null
+      },
+      "gotcha": "Default values are evaluated once at definition — a mutable default like def f(x=[]) is shared across calls."
+    },
+    "comfortable": {
+      "body": "Definition is execution: the def statement runs at import time, evaluating defaults once (hence the mutable-default trap).",
+      "example": {
+        "code": "def greet(name):\n    return f\"hello, {name}\"\n\nprint(greet(\"Ada\"))",
+        "expected_output": null
+      },
+      "gotcha": "Default values are evaluated once at definition — a mutable default like def f(x=[]) is shared across calls."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

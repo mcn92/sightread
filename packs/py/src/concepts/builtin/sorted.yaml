@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:sorted",
+  "names": [
+    "sorted()",
+    "sorted"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"sorted\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"sorted\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Gives back a new list with the items in order, smallest to largest. The original is left alone.",
+      "example": {
+        "code": "words = [\"bb\", \"a\", \"ccc\"]\nprint(sorted(words, key=len))  # ['a', 'bb', 'ccc']",
+        "expected_output": null
+      },
+      "gotcha": "sorted() returns a new list; list.sort() sorts in place and returns None."
+    },
+    "learning": {
+      "body": "Returns a new sorted list from any iterable. key= sorts by a computed value; reverse=True flips the order. list.sort() does the same in place.",
+      "example": {
+        "code": "words = [\"bb\", \"a\", \"ccc\"]\nprint(sorted(words, key=len))  # ['a', 'bb', 'ccc']",
+        "expected_output": null
+      },
+      "gotcha": "sorted() returns a new list; list.sort() sorts in place and returns None."
+    },
+    "comfortable": {
+      "body": "Timsort, stable — equal keys keep their relative order, which makes multi-pass sorts composable.",
+      "example": {
+        "code": "words = [\"bb\", \"a\", \"ccc\"]\nprint(sorted(words, key=len))  # ['a', 'bb', 'ccc']",
+        "expected_output": null
+      },
+      "gotcha": "sorted() returns a new list; list.sort() sorts in place and returns None."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

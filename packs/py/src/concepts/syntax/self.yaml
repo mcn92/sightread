@@ -1,0 +1,56 @@
+{
+  "id": "py:syntax:self",
+  "names": [
+    "self"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "((identifier) @target (#eq? @target \"self\"))",
+      "guards": [
+        {
+          "guard": "inside",
+          "capture": "@target",
+          "nodeType": "function_definition"
+        },
+        {
+          "guard": "inside",
+          "capture": "@target",
+          "nodeType": "class_definition"
+        }
+      ],
+      "priority": 65
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Inside a class, \"self\" means \"this particular object.\" When you write self.name, you're reading or storing data that belongs to the specific object being used.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name",
+        "expected_output": null
+      },
+      "gotcha": "self is not automatic *inside* the class body — every method must list it as the first parameter."
+    },
+    "learning": {
+      "body": "The first parameter of a method — Python passes the instance in automatically when you call obj.method(). The name \"self\" is convention, not a keyword.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name",
+        "expected_output": null
+      },
+      "gotcha": "self is not automatic *inside* the class body — every method must list it as the first parameter."
+    },
+    "comfortable": {
+      "body": "Explicit instance receiver; obj.method(x) is sugar for Cls.method(obj, x). Forgetting it in the signature is the classic \"takes 1 positional argument but 2 were given.\"",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name",
+        "expected_output": null
+      },
+      "gotcha": "self is not automatic *inside* the class body — every method must list it as the first parameter."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

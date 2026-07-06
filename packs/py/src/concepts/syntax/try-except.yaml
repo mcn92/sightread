@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:try-except",
+  "names": [
+    "try / except",
+    "exception handling"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(try_statement) @target",
+      "priority": 30
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "try runs code that might fail; if a matching error happens, the except block handles it instead of crashing the program.",
+      "example": {
+        "code": "try:\n    n = int(\"abc\")\nexcept ValueError:\n    print(\"not a number\")",
+        "expected_output": null
+      },
+      "gotcha": "A bare except hides every error, including typos in your own code — always name the exception."
+    },
+    "learning": {
+      "body": "Catch specific exception types — except ValueError — rather than everything. else runs when no exception occurred; finally runs no matter what.",
+      "example": {
+        "code": "try:\n    n = int(\"abc\")\nexcept ValueError:\n    print(\"not a number\")",
+        "expected_output": null
+      },
+      "gotcha": "A bare except hides every error, including typos in your own code — always name the exception."
+    },
+    "comfortable": {
+      "body": "EAFP style: attempt and handle, rather than pre-check. Bare \"except:\" also swallows KeyboardInterrupt and SystemExit — almost never what you want.",
+      "example": {
+        "code": "try:\n    n = int(\"abc\")\nexcept ValueError:\n    print(\"not a number\")",
+        "expected_output": null
+      },
+      "gotcha": "A bare except hides every error, including typos in your own code — always name the exception."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

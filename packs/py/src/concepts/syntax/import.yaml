@@ -1,0 +1,44 @@
+{
+  "id": "py:syntax:import",
+  "names": [
+    "import"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(import_statement) @target",
+      "priority": 30
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Loads another module so you can use its contents, accessed with a dot: after \"import math\", you write math.sqrt(9).",
+      "example": {
+        "code": "import math\nprint(math.sqrt(9))  # 3.0",
+        "expected_output": null
+      },
+      "gotcha": "Importing runs the module's top-level code — that's why the __main__ guard exists."
+    },
+    "learning": {
+      "body": "Runs the module once (results are cached) and binds its name here. \"import x as y\" renames it locally.",
+      "example": {
+        "code": "import math\nprint(math.sqrt(9))  # 3.0",
+        "expected_output": null
+      },
+      "gotcha": "Importing runs the module's top-level code — that's why the __main__ guard exists."
+    },
+    "comfortable": {
+      "body": "Module executes top-to-bottom on first import, then comes from sys.modules. Import-time side effects live in that first run.",
+      "example": {
+        "code": "import math\nprint(math.sqrt(9))  # 3.0",
+        "expected_output": null
+      },
+      "gotcha": "Importing runs the module's top-level code — that's why the __main__ guard exists."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

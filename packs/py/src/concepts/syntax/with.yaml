@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:with",
+  "names": [
+    "with statement",
+    "context manager"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(with_statement) @target",
+      "priority": 30
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "with opens something that needs cleanup — like a file — and guarantees it gets closed when the block ends, even if an error happens inside.",
+      "example": {
+        "code": "with open(\"notes.txt\") as f:\n    text = f.read()",
+        "expected_output": null
+      },
+      "gotcha": "The variable after \"as\" still exists after the block — but the resource behind it is already closed."
+    },
+    "learning": {
+      "body": "Runs a block under a context manager: setup on entry, guaranteed teardown on exit. \"as f\" names whatever the manager hands you.",
+      "example": {
+        "code": "with open(\"notes.txt\") as f:\n    text = f.read()",
+        "expected_output": null
+      },
+      "gotcha": "The variable after \"as\" still exists after the block — but the resource behind it is already closed."
+    },
+    "comfortable": {
+      "body": "Sugar for try/finally around __enter__/__exit__. Multiple managers can share one with; contextlib builds them from generators.",
+      "example": {
+        "code": "with open(\"notes.txt\") as f:\n    text = f.read()",
+        "expected_output": null
+      },
+      "gotcha": "The variable after \"as\" still exists after the block — but the resource behind it is already closed."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

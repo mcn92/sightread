@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:print",
+  "names": [
+    "print()",
+    "print"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"print\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"print\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Shows a value on the screen. It's how your program talks to you — it doesn't change or return anything useful.",
+      "example": {
+        "code": "print(\"score:\", 42)   # score: 42",
+        "expected_output": null
+      },
+      "gotcha": "print returns None — capturing \"x = print(5)\" stores nothing useful."
+    },
+    "learning": {
+      "body": "Writes its arguments to standard output, separated by spaces, with a newline at the end. sep= and end= customize both.",
+      "example": {
+        "code": "print(\"score:\", 42)   # score: 42",
+        "expected_output": null
+      },
+      "gotcha": "print returns None — capturing \"x = print(5)\" stores nothing useful."
+    },
+    "comfortable": {
+      "body": "I/O side effect returning None; end=\"\" suppresses the newline, file= redirects, flush=True forces immediate output.",
+      "example": {
+        "code": "print(\"score:\", 42)   # score: 42",
+        "expected_output": null
+      },
+      "gotcha": "print returns None — capturing \"x = print(5)\" stores nothing useful."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

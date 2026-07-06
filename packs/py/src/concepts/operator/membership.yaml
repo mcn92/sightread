@@ -1,0 +1,44 @@
+{
+  "id": "py:operator:membership",
+  "names": [
+    "in (membership)"
+  ],
+  "category": "operator",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(comparison_operator \"in\" @target)",
+      "priority": 40
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Asks whether something is inside a collection: \"a\" in \"cat\" is True, 5 in [1, 2, 3] is False.",
+      "example": {
+        "code": "vowels = \"aeiou\"\nprint(\"e\" in vowels)  # True",
+        "expected_output": null
+      },
+      "gotcha": "On a dict, \"in\" checks keys only — values need \"x in d.values()\"."
+    },
+    "learning": {
+      "body": "Membership test for sequences, sets, and dicts (checks keys). \"not in\" is the negation. This is a different \"in\" from the one in a for loop.",
+      "example": {
+        "code": "vowels = \"aeiou\"\nprint(\"e\" in vowels)  # True",
+        "expected_output": null
+      },
+      "gotcha": "On a dict, \"in\" checks keys only — values need \"x in d.values()\"."
+    },
+    "comfortable": {
+      "body": "Dispatches to __contains__; O(1) for sets/dicts, O(n) for lists — the classic reason to convert a lookup list to a set.",
+      "example": {
+        "code": "vowels = \"aeiou\"\nprint(\"e\" in vowels)  # True",
+        "expected_output": null
+      },
+      "gotcha": "On a dict, \"in\" checks keys only — values need \"x in d.values()\"."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

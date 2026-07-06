@@ -1,0 +1,44 @@
+{
+  "id": "py:operator:floor-div",
+  "names": [
+    "// (floor division)"
+  ],
+  "category": "operator",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(binary_operator operator: \"//\" @target)",
+      "priority": 40
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Division that throws away the remainder: 7 // 2 is 3. A single slash would give 3.5.",
+      "example": {
+        "code": "print(7 // 2)   # 3\nprint(7 / 2)    # 3.5",
+        "expected_output": null
+      },
+      "gotcha": "It floors, not truncates: -7 // 2 is -4."
+    },
+    "learning": {
+      "body": "Divides and rounds down (floor). With negatives it keeps rounding down: -7 // 2 is -4, not -3.",
+      "example": {
+        "code": "print(7 // 2)   # 3\nprint(7 / 2)    # 3.5",
+        "expected_output": null
+      },
+      "gotcha": "It floors, not truncates: -7 // 2 is -4."
+    },
+    "comfortable": {
+      "body": "Floor division, paired with % so that (a // b) * b + a % b == a. Rounds toward negative infinity, unlike C's truncation.",
+      "example": {
+        "code": "print(7 // 2)   # 3\nprint(7 / 2)    # 3.5",
+        "expected_output": null
+      },
+      "gotcha": "It floors, not truncates: -7 // 2 is -4."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

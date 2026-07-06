@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:input",
+  "names": [
+    "input()",
+    "input"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"input\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"input\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Pauses the program and waits for the user to type something. Whatever they type comes back as text.",
+      "example": {
+        "code": "name = input(\"Your name: \")\nprint(f\"hi, {name}\")",
+        "expected_output": null
+      },
+      "gotcha": "input always returns a string: input() + 1 is a TypeError until you convert it."
+    },
+    "learning": {
+      "body": "Reads one line from the keyboard and returns it as a string — always a string, even if the user types a number. Convert with int() or float().",
+      "example": {
+        "code": "name = input(\"Your name: \")\nprint(f\"hi, {name}\")",
+        "expected_output": null
+      },
+      "gotcha": "input always returns a string: input() + 1 is a TypeError until you convert it."
+    },
+    "comfortable": {
+      "body": "Blocking read from stdin, newline stripped; raises EOFError at end of input.",
+      "example": {
+        "code": "name = input(\"Your name: \")\nprint(f\"hi, {name}\")",
+        "expected_output": null
+      },
+      "gotcha": "input always returns a string: input() + 1 is a TypeError until you convert it."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

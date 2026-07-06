@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:sum",
+  "names": [
+    "sum()",
+    "sum"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"sum\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"sum\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Adds up all the numbers in a collection: sum([1, 2, 3]) is 6.",
+      "example": {
+        "code": "print(sum([1, 2, 3]))      # 6\nprint(sum(range(101)))     # 5050",
+        "expected_output": null
+      },
+      "gotcha": "sum on strings is blocked on purpose — use \"\".join(strings), which is far faster anyway."
+    },
+    "learning": {
+      "body": "Totals any iterable of numbers; the second argument is a starting value. For joining strings use \"\".join() instead.",
+      "example": {
+        "code": "print(sum([1, 2, 3]))      # 6\nprint(sum(range(101)))     # 5050",
+        "expected_output": null
+      },
+      "gotcha": "sum on strings is blocked on purpose — use \"\".join(strings), which is far faster anyway."
+    },
+    "comfortable": {
+      "body": "Left fold with +; rejects str starts by design. math.fsum for float precision.",
+      "example": {
+        "code": "print(sum([1, 2, 3]))      # 6\nprint(sum(range(101)))     # 5050",
+        "expected_output": null
+      },
+      "gotcha": "sum on strings is blocked on purpose — use \"\".join(strings), which is far faster anyway."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

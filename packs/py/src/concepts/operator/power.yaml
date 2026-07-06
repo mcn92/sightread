@@ -1,0 +1,44 @@
+{
+  "id": "py:operator:power",
+  "names": [
+    "** (power)"
+  ],
+  "category": "operator",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(binary_operator operator: \"**\" @target)",
+      "priority": 40
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Raises to a power: 2 ** 3 is 8. Not the same as 2 * 3.",
+      "example": {
+        "code": "print(2 ** 10)   # 1024\nprint(9 ** 0.5)  # 3.0",
+        "expected_output": null
+      },
+      "gotcha": "-2 ** 2 is -4, because ** binds before the minus. Use (-2) ** 2 for 4."
+    },
+    "learning": {
+      "body": "Exponentiation; works with fractional exponents too, so x ** 0.5 is a square root.",
+      "example": {
+        "code": "print(2 ** 10)   # 1024\nprint(9 ** 0.5)  # 3.0",
+        "expected_output": null
+      },
+      "gotcha": "-2 ** 2 is -4, because ** binds before the minus. Use (-2) ** 2 for 4."
+    },
+    "comfortable": {
+      "body": "Right-associative (2 ** 3 ** 2 is 512) and binds tighter than unary minus: -2 ** 2 is -4.",
+      "example": {
+        "code": "print(2 ** 10)   # 1024\nprint(9 ** 0.5)  # 3.0",
+        "expected_output": null
+      },
+      "gotcha": "-2 ** 2 is -4, because ** binds before the minus. Use (-2) ** 2 for 4."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

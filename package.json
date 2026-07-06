@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run pack:build && tsc -b && vite build",
     "lint": "oxlint",
+    "pack:build": "node tools/compile-pack.mjs",
+    "pack:migrate:m0": "node tools/compile-pack.mjs --migrate-m0",
     "preview": "vite preview",
     "test": "vitest run"
   },

@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:dunder-init",
+  "names": [
+    "__init__",
+    "the constructor"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(function_definition name: (identifier) @target (#eq? @target \"__init__\"))",
+      "priority": 70
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "The setup method of a class. It runs automatically every time a new object is created, and it's where the object's starting data gets attached with self.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\nrex = Dog(\"Rex\")",
+        "expected_output": null
+      },
+      "gotcha": "It's spelled with two underscores on each side — \"dunder init,\" not \"_init_\"."
+    },
+    "learning": {
+      "body": "The initializer: Dog(\"Rex\") creates the object, then calls __init__(self, \"Rex\") on it. Arguments to the class call become arguments to __init__.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\nrex = Dog(\"Rex\")",
+        "expected_output": null
+      },
+      "gotcha": "It's spelled with two underscores on each side — \"dunder init,\" not \"_init_\"."
+    },
+    "comfortable": {
+      "body": "Initializes an already-created instance (__new__ does the creating). Should assign state and return None — returning anything else raises.",
+      "example": {
+        "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\nrex = Dog(\"Rex\")",
+        "expected_output": null
+      },
+      "gotcha": "It's spelled with two underscores on each side — \"dunder init,\" not \"_init_\"."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

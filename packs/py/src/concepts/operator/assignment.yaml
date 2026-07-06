@@ -1,0 +1,46 @@
+{
+  "id": "py:operator:assignment",
+  "names": [
+    "= (assignment)"
+  ],
+  "category": "operator",
+  "level_gate": {
+    "max": "novice"
+  },
+  "selectors": [
+    {
+      "query": "(assignment \"=\" @target)",
+      "priority": 15
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "One equals sign stores the value on the right under the name on the left. It's an action, not a question — the question version is ==.",
+      "example": {
+        "code": "age = 21\nage = age + 1  # now 22",
+        "expected_output": null
+      },
+      "gotcha": "Assigning a list to a second name doesn't copy it — both names point at the same list."
+    },
+    "learning": {
+      "body": "Binds the name on the left to the value on the right.",
+      "example": {
+        "code": "age = 21\nage = age + 1  # now 22",
+        "expected_output": null
+      },
+      "gotcha": "Assigning a list to a second name doesn't copy it — both names point at the same list."
+    },
+    "comfortable": {
+      "body": "Name binding.",
+      "example": {
+        "code": "age = 21\nage = age + 1  # now 22",
+        "expected_output": null
+      },
+      "gotcha": "Assigning a list to a second name doesn't copy it — both names point at the same list."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

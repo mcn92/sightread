@@ -1,0 +1,44 @@
+{
+  "id": "py:operator:equality",
+  "names": [
+    "== (equality)"
+  ],
+  "category": "operator",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(comparison_operator \"==\" @target)",
+      "priority": 35
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Two equals signs ask a question — \"are these the same value?\" — and answer True or False. One equals sign stores a value instead.",
+      "example": {
+        "code": "x = 5      # assignment\nprint(x == 5)  # True",
+        "expected_output": null
+      },
+      "gotcha": "Writing = where you meant == inside a condition is a syntax error in Python — a helpful one."
+    },
+    "learning": {
+      "body": "Value equality: compares contents, so [1, 2] == [1, 2] is True even for two separate lists. \"is\" checks identity (same object), which is different.",
+      "example": {
+        "code": "x = 5      # assignment\nprint(x == 5)  # True",
+        "expected_output": null
+      },
+      "gotcha": "Writing = where you meant == inside a condition is a syntax error in Python — a helpful one."
+    },
+    "comfortable": {
+      "body": "Dispatches to __eq__. Use == for values, \"is\" only for None and sentinels.",
+      "example": {
+        "code": "x = 5      # assignment\nprint(x == 5)  # True",
+        "expected_output": null
+      },
+      "gotcha": "Writing = where you meant == inside a condition is a syntax error in Python — a helpful one."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

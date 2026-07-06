@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:f-string",
+  "names": [
+    "f-string",
+    "f\"...\""
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(string (interpolation)) @target",
+      "priority": 55
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "A string that can contain live values: anything inside {curly braces} is Python code whose result gets inserted into the text.",
+      "example": {
+        "code": "name = \"Ada\"\nprint(f\"hello, {name}!\")  # hello, Ada!",
+        "expected_output": null
+      },
+      "gotcha": "Forget the f prefix and the braces print literally: \"hello, {name}!\"."
+    },
+    "learning": {
+      "body": "Formatted string literal — the f prefix makes {expressions} evaluate in place. Supports format specs after a colon, like {price:.2f} for two decimals.",
+      "example": {
+        "code": "name = \"Ada\"\nprint(f\"hello, {name}!\")  # hello, Ada!",
+        "expected_output": null
+      },
+      "gotcha": "Forget the f prefix and the braces print literally: \"hello, {name}!\"."
+    },
+    "comfortable": {
+      "body": "Compile-time interpolation; {expr!r} for repr, {expr=} to print the expression and its value — useful for quick debugging.",
+      "example": {
+        "code": "name = \"Ada\"\nprint(f\"hello, {name}!\")  # hello, Ada!",
+        "expected_output": null
+      },
+      "gotcha": "Forget the f prefix and the braces print literally: \"hello, {name}!\"."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

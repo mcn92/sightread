@@ -1,0 +1,46 @@
+{
+  "format_version": "1.0",
+  "lang": "py",
+  "pack_version": 0,
+  "created_at": "1970-01-01T00:00:00.000Z",
+  "min_app_version": "0.0.0",
+  "skeleton": true,
+  "grammar": {
+    "name": "tree-sitter-python",
+    "revision": "npm:tree-sitter-python@0.25.0"
+  },
+  "embedding_model": null,
+  "t1_threshold": null,
+  "files": [
+    {
+      "path": "concepts.json",
+      "bytes": 85195,
+      "sha256": "fae8fb5b546dee6dc53f30f154a85b15ec7c292dda3200fc4f197458abbc5033"
+    },
+    {
+      "path": "runtime-concepts.json",
+      "bytes": 48099,
+      "sha256": "1b521902cab75019627ca3cc71c357822730d535d1d49634f081f410042d47ec"
+    },
+    {
+      "path": "aliases.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "grammar.wasm",
+      "bytes": 457883,
+      "sha256": "16108b50df4ee9a30168794252ab55e7c93bfc5765d7fa0aa3e335752c515f47"
+    },
+    {
+      "path": "index.pancake",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "signature": {
+    "alg": "unsigned-skeleton",
+    "key_id": null,
+    "sig": null
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:dict-comprehension",
+  "names": [
+    "dict comprehension",
+    "{k: v for ...}"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(dictionary_comprehension) @target",
+      "priority": 50
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Like a list comprehension, but it builds a dictionary: each pass produces a key and a value, written as key: value before the \"for\".",
+      "example": {
+        "code": "squares = {n: n * n for n in range(4)}\n# {0: 0, 1: 1, 2: 4, 3: 9}",
+        "expected_output": null
+      },
+      "gotcha": "Duplicate keys don't error — the last one quietly wins."
+    },
+    "learning": {
+      "body": "Builds a dict from an iterable in one expression. Handy for inverting mappings or reshaping data: {k: v for k, v in pairs}.",
+      "example": {
+        "code": "squares = {n: n * n for n in range(4)}\n# {0: 0, 1: 1, 2: 4, 3: 9}",
+        "expected_output": null
+      },
+      "gotcha": "Duplicate keys don't error — the last one quietly wins."
+    },
+    "comfortable": {
+      "body": "Dict construction with the comprehension syntax; later keys silently overwrite earlier duplicates.",
+      "example": {
+        "code": "squares = {n: n * n for n in range(4)}\n# {0: 0, 1: 1, 2: 4, 3: 9}",
+        "expected_output": null
+      },
+      "gotcha": "Duplicate keys don't error — the last one quietly wins."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

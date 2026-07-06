@@ -1,0 +1,45 @@
+{
+  "id": "py:syntax:slice",
+  "names": [
+    "slice",
+    "[start:stop]"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(slice) @target",
+      "priority": 55
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Square brackets with a colon cut out a piece of a sequence: items[1:3] gives the items at positions 1 and 2. The stop position is not included.",
+      "example": {
+        "code": "letters = [\"a\", \"b\", \"c\", \"d\"]\nprint(letters[1:3])  # ['b', 'c']",
+        "expected_output": null
+      },
+      "gotcha": "The stop index is excluded — seq[1:3] is two items, not three."
+    },
+    "learning": {
+      "body": "seq[start:stop:step] — any part can be omitted. Negative indexes count from the end, so seq[-2:] is the last two items and seq[::-1] is the sequence reversed.",
+      "example": {
+        "code": "letters = [\"a\", \"b\", \"c\", \"d\"]\nprint(letters[1:3])  # ['b', 'c']",
+        "expected_output": null
+      },
+      "gotcha": "The stop index is excluded — seq[1:3] is two items, not three."
+    },
+    "comfortable": {
+      "body": "Half-open interval [start, stop) with optional stride; always returns a new object for lists, a view for memoryview/numpy.",
+      "example": {
+        "code": "letters = [\"a\", \"b\", \"c\", \"d\"]\nprint(letters[1:3])  # ['b', 'c']",
+        "expected_output": null
+      },
+      "gotcha": "The stop index is excluded — seq[1:3] is two items, not three."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

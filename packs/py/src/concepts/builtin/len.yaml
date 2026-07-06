@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:len",
+  "names": [
+    "len()",
+    "len"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"len\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"len\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Tells you how many items something holds — characters in a string, elements in a list, keys in a dictionary.",
+      "example": {
+        "code": "print(len(\"hello\"))   # 5",
+        "expected_output": null
+      },
+      "gotcha": "len works on containers, not numbers — len(42) is a TypeError."
+    },
+    "learning": {
+      "body": "Returns the item count of any sized container. It's a function, not a method: len(x), never x.len().",
+      "example": {
+        "code": "print(len(\"hello\"))   # 5",
+        "expected_output": null
+      },
+      "gotcha": "len works on containers, not numbers — len(42) is a TypeError."
+    },
+    "comfortable": {
+      "body": "Dispatches to __len__; O(1) for all built-in containers.",
+      "example": {
+        "code": "print(len(\"hello\"))   # 5",
+        "expected_output": null
+      },
+      "gotcha": "len works on containers, not numbers — len(42) is a TypeError."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

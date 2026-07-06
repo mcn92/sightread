@@ -1,0 +1,67 @@
+{
+  "id": "py:builtin:enumerate",
+  "names": [
+    "enumerate()",
+    "enumerate"
+  ],
+  "category": "builtin",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(call function: (identifier) @callee (#eq? @callee \"enumerate\")) @target",
+      "capture": "@callee",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@callee"
+        }
+      ],
+      "priority": 60
+    },
+    {
+      "query": "((identifier) @target (#eq? @target \"enumerate\"))",
+      "guards": [
+        {
+          "guard": "not_locally_bound",
+          "capture": "@target"
+        },
+        {
+          "guard": "not_inside",
+          "capture": "@target",
+          "nodeType": "attribute"
+        }
+      ],
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Loops over a collection while also counting: each pass gives you the position and the item together.",
+      "example": {
+        "code": "for i, letter in enumerate(\"abc\"):\n    print(i, letter)",
+        "expected_output": null
+      },
+      "gotcha": "Each element is a pair — unpack it as \"for i, item in ...\" or you'll get tuples."
+    },
+    "learning": {
+      "body": "Wraps an iterable to yield (index, item) pairs — the Pythonic replacement for looping over range(len(x)). start= sets the first index.",
+      "example": {
+        "code": "for i, letter in enumerate(\"abc\"):\n    print(i, letter)",
+        "expected_output": null
+      },
+      "gotcha": "Each element is a pair — unpack it as \"for i, item in ...\" or you'll get tuples."
+    },
+    "comfortable": {
+      "body": "Lazy (index, item) iterator; pairs naturally with tuple unpacking in the for target.",
+      "example": {
+        "code": "for i, letter in enumerate(\"abc\"):\n    print(i, letter)",
+        "expected_output": null
+      },
+      "gotcha": "Each element is a pair — unpack it as \"for i, item in ...\" or you'll get tuples."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

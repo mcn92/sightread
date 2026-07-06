@@ -1,0 +1,49 @@
+{
+  "id": "py:syntax:star-args",
+  "names": [
+    "*args",
+    "star unpacking"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(list_splat_pattern) @target",
+      "priority": 55
+    },
+    {
+      "query": "(list_splat) @target",
+      "priority": 55
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "A single star gathers or spreads a sequence. In a def, *args collects any number of extra arguments into a tuple; in a call, *mylist spreads a list out into separate arguments.",
+      "example": {
+        "code": "def total(*nums):\n    return sum(nums)\n\nprint(total(1, 2, 3))  # 6",
+        "expected_output": null
+      },
+      "gotcha": "Inside the function, args is a plain tuple — the star exists only in the signature and call."
+    },
+    "learning": {
+      "body": "Packing and unpacking: def f(*args) accepts variable arguments; f(*seq) unpacks one. Also works in assignment: first, *rest = items.",
+      "example": {
+        "code": "def total(*nums):\n    return sum(nums)\n\nprint(total(1, 2, 3))  # 6",
+        "expected_output": null
+      },
+      "gotcha": "Inside the function, args is a plain tuple — the star exists only in the signature and call."
+    },
+    "comfortable": {
+      "body": "Iterable packing/unpacking. In signatures, a bare * afterward forces keyword-only parameters.",
+      "example": {
+        "code": "def total(*nums):\n    return sum(nums)\n\nprint(total(1, 2, 3))  # 6",
+        "expected_output": null
+      },
+      "gotcha": "Inside the function, args is a plain tuple — the star exists only in the signature and call."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

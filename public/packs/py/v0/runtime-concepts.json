@@ -1,0 +1,1479 @@
+[
+  {
+    "id": "py:builtin:booleans",
+    "names": [
+      "True / False"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(true) @target",
+        "priority": 45
+      },
+      {
+        "query": "(false) @target",
+        "priority": 45
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "The two truth values. Comparisons produce them, and if-statements consume them. Capitalized — true and false are errors."
+      },
+      "learning": {
+        "body": "The bool constants. Other values have truthiness too: empty containers, 0, and None count as false in conditions."
+      },
+      "comfortable": {
+        "body": "bool subclasses int (True == 1), which enables sum(predicate(x) for x in xs) counting — and the occasional surprise."
+      }
+    },
+    "example": {
+      "code": "flag = 3 > 2\nprint(flag)        # True\nprint(True + True) # 2"
+    },
+    "gotcha": "They must be capitalized: \"true\" is just an undefined name."
+  },
+  {
+    "id": "py:builtin:enumerate",
+    "names": [
+      "enumerate()",
+      "enumerate"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"enumerate\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"enumerate\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Loops over a collection while also counting: each pass gives you the position and the item together."
+      },
+      "learning": {
+        "body": "Wraps an iterable to yield (index, item) pairs — the Pythonic replacement for looping over range(len(x)). start= sets the first index."
+      },
+      "comfortable": {
+        "body": "Lazy (index, item) iterator; pairs naturally with tuple unpacking in the for target."
+      }
+    },
+    "example": {
+      "code": "for i, letter in enumerate(\"abc\"):\n    print(i, letter)"
+    },
+    "gotcha": "Each element is a pair — unpack it as \"for i, item in ...\" or you'll get tuples."
+  },
+  {
+    "id": "py:builtin:input",
+    "names": [
+      "input()",
+      "input"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"input\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"input\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Pauses the program and waits for the user to type something. Whatever they type comes back as text."
+      },
+      "learning": {
+        "body": "Reads one line from the keyboard and returns it as a string — always a string, even if the user types a number. Convert with int() or float()."
+      },
+      "comfortable": {
+        "body": "Blocking read from stdin, newline stripped; raises EOFError at end of input."
+      }
+    },
+    "example": {
+      "code": "name = input(\"Your name: \")\nprint(f\"hi, {name}\")"
+    },
+    "gotcha": "input always returns a string: input() + 1 is a TypeError until you convert it."
+  },
+  {
+    "id": "py:builtin:isinstance",
+    "names": [
+      "isinstance()",
+      "isinstance"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"isinstance\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"isinstance\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Asks whether a value is a certain type: isinstance(3, int) is True."
+      },
+      "learning": {
+        "body": "Type check that respects inheritance — an instance of a subclass counts. Accepts a tuple of types: isinstance(x, (int, float))."
+      },
+      "comfortable": {
+        "body": "Prefer over type(x) == T for polymorphism; with abstract base classes it checks interfaces, not just ancestry."
+      }
+    },
+    "example": {
+      "code": "print(isinstance(3.5, (int, float)))  # True"
+    },
+    "gotcha": "bool is a subclass of int — isinstance(True, int) is True, which surprises everyone once."
+  },
+  {
+    "id": "py:builtin:len",
+    "names": [
+      "len()",
+      "len"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"len\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"len\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Tells you how many items something holds — characters in a string, elements in a list, keys in a dictionary."
+      },
+      "learning": {
+        "body": "Returns the item count of any sized container. It's a function, not a method: len(x), never x.len()."
+      },
+      "comfortable": {
+        "body": "Dispatches to __len__; O(1) for all built-in containers."
+      }
+    },
+    "example": {
+      "code": "print(len(\"hello\"))   # 5"
+    },
+    "gotcha": "len works on containers, not numbers — len(42) is a TypeError."
+  },
+  {
+    "id": "py:builtin:none",
+    "names": [
+      "None"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(none) @target",
+        "priority": 45
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "The \"nothing here\" value. Functions that don't return anything actually return None, and it's often used to mean \"no answer yet.\""
+      },
+      "learning": {
+        "body": "The single null object. Test for it with \"is None\", not \"== None\". It's falsy, but so are 0 and \"\" — check identity when you specifically mean None."
+      },
+      "comfortable": {
+        "body": "Singleton of NoneType; the conventional default-argument sentinel (def f(x=None)) precisely because of the mutable-default trap."
+      }
+    },
+    "example": {
+      "code": "result = print(\"hi\")\nprint(result is None)  # True"
+    },
+    "gotcha": "\"if not x\" is True for 0 and \"\" too — use \"if x is None\" when None is what you mean."
+  },
+  {
+    "id": "py:builtin:open",
+    "names": [
+      "open()",
+      "open"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"open\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"open\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Opens a file so your program can read or write it. Almost always used with \"with\", which closes the file for you."
+      },
+      "learning": {
+        "body": "Returns a file object; the mode string picks reading (\"r\"), writing (\"w\" — erases!), or appending (\"a\"). Pair with with for guaranteed cleanup."
+      },
+      "comfortable": {
+        "body": "Text mode decodes via encoding= (pass it explicitly; the default is platform-dependent pre-3.15); \"b\" modes yield bytes."
+      }
+    },
+    "example": {
+      "code": "with open(\"notes.txt\") as f:\n    print(f.read())"
+    },
+    "gotcha": "Mode \"w\" truncates the file the moment it opens — before you've written anything."
+  },
+  {
+    "id": "py:builtin:print",
+    "names": [
+      "print()",
+      "print"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"print\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"print\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Shows a value on the screen. It's how your program talks to you — it doesn't change or return anything useful."
+      },
+      "learning": {
+        "body": "Writes its arguments to standard output, separated by spaces, with a newline at the end. sep= and end= customize both."
+      },
+      "comfortable": {
+        "body": "I/O side effect returning None; end=\"\" suppresses the newline, file= redirects, flush=True forces immediate output."
+      }
+    },
+    "example": {
+      "code": "print(\"score:\", 42)   # score: 42"
+    },
+    "gotcha": "print returns None — capturing \"x = print(5)\" stores nothing useful."
+  },
+  {
+    "id": "py:builtin:range",
+    "names": [
+      "range()",
+      "range"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"range\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"range\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Produces a sequence of counting numbers, most often to run a loop N times. range(3) gives 0, 1, 2 — it stops before the number you give it."
+      },
+      "learning": {
+        "body": "range(start, stop, step) counts from start up to (but not including) stop. It's lazy — wrap it in list() to see the numbers."
+      },
+      "comfortable": {
+        "body": "A lazy immutable sequence with O(1) membership tests and slicing; not a generator — it can be iterated repeatedly."
+      }
+    },
+    "example": {
+      "code": "for i in range(3):\n    print(i)   # 0, 1, 2"
+    },
+    "gotcha": "The stop value is never produced: range(1, 5) ends at 4."
+  },
+  {
+    "id": "py:builtin:sorted",
+    "names": [
+      "sorted()",
+      "sorted"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"sorted\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"sorted\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Gives back a new list with the items in order, smallest to largest. The original is left alone."
+      },
+      "learning": {
+        "body": "Returns a new sorted list from any iterable. key= sorts by a computed value; reverse=True flips the order. list.sort() does the same in place."
+      },
+      "comfortable": {
+        "body": "Timsort, stable — equal keys keep their relative order, which makes multi-pass sorts composable."
+      }
+    },
+    "example": {
+      "code": "words = [\"bb\", \"a\", \"ccc\"]\nprint(sorted(words, key=len))  # ['a', 'bb', 'ccc']"
+    },
+    "gotcha": "sorted() returns a new list; list.sort() sorts in place and returns None."
+  },
+  {
+    "id": "py:builtin:sum",
+    "names": [
+      "sum()",
+      "sum"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"sum\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"sum\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Adds up all the numbers in a collection: sum([1, 2, 3]) is 6."
+      },
+      "learning": {
+        "body": "Totals any iterable of numbers; the second argument is a starting value. For joining strings use \"\".join() instead."
+      },
+      "comfortable": {
+        "body": "Left fold with +; rejects str starts by design. math.fsum for float precision."
+      }
+    },
+    "example": {
+      "code": "print(sum([1, 2, 3]))      # 6\nprint(sum(range(101)))     # 5050"
+    },
+    "gotcha": "sum on strings is blocked on purpose — use \"\".join(strings), which is far faster anyway."
+  },
+  {
+    "id": "py:builtin:zip",
+    "names": [
+      "zip()",
+      "zip"
+    ],
+    "category": "builtin",
+    "selectors": [
+      {
+        "query": "(call function: (identifier) @callee (#eq? @callee \"zip\")) @target",
+        "capture": "@callee",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@callee"
+          }
+        ],
+        "priority": 60
+      },
+      {
+        "query": "((identifier) @target (#eq? @target \"zip\"))",
+        "guards": [
+          {
+            "guard": "not_locally_bound",
+            "capture": "@target"
+          },
+          {
+            "guard": "not_inside",
+            "capture": "@target",
+            "nodeType": "attribute"
+          }
+        ],
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Walks two (or more) collections side by side, pairing up their items: first with first, second with second."
+      },
+      "learning": {
+        "body": "Yields tuples of matched elements and stops at the shortest input. zip(*pairs) runs it in reverse to unzip."
+      },
+      "comfortable": {
+        "body": "Lazy parallel iterator; strict=True (3.10+) raises on unequal lengths instead of silently truncating."
+      }
+    },
+    "example": {
+      "code": "names = [\"Ada\", \"Alan\"]\nages = [36, 41]\nfor name, age in zip(names, ages):\n    print(name, age)"
+    },
+    "gotcha": "zip silently stops at the shortest input — mismatched lengths lose data without warning."
+  },
+  {
+    "id": "py:idiom:main-guard",
+    "names": [
+      "the __main__ guard",
+      "if __name__ == \"__main__\""
+    ],
+    "category": "idiom",
+    "selectors": [
+      {
+        "query": "(if_statement condition: (comparison_operator (identifier) @n (#eq? @n \"__name__\"))) @target",
+        "priority": 85
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "This line means \"only run the code below when this file is run directly.\" When the file is imported by another file, the code below is skipped."
+      },
+      "learning": {
+        "body": "Python sets the special variable __name__ to \"__main__\" when a file runs as the program, and to the module's name when it's imported. This check separates \"script behavior\" from \"library behavior.\""
+      },
+      "comfortable": {
+        "body": "The standard entry-point guard: run-time behavior lives here, importable definitions live above it. Keeps imports side-effect-free."
+      }
+    },
+    "example": {
+      "code": "def main():\n    print(\"running\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    "gotcha": "Code above the guard still runs on import — only what's inside the if is protected."
+  },
+  {
+    "id": "py:operator:assignment",
+    "names": [
+      "= (assignment)"
+    ],
+    "category": "operator",
+    "selectors": [
+      {
+        "query": "(assignment \"=\" @target)",
+        "priority": 15
+      }
+    ],
+    "maxLevel": "novice",
+    "levels": {
+      "novice": {
+        "body": "One equals sign stores the value on the right under the name on the left. It's an action, not a question — the question version is ==."
+      },
+      "learning": {
+        "body": "Binds the name on the left to the value on the right."
+      },
+      "comfortable": {
+        "body": "Name binding."
+      }
+    },
+    "example": {
+      "code": "age = 21\nage = age + 1  # now 22"
+    },
+    "gotcha": "Assigning a list to a second name doesn't copy it — both names point at the same list."
+  },
+  {
+    "id": "py:operator:aug-assign",
+    "names": [
+      "+= (add and assign)"
+    ],
+    "category": "operator",
+    "selectors": [
+      {
+        "query": "(augmented_assignment operator: \"+=\" @target)",
+        "priority": 40
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Shorthand for \"add to what's already there\": count += 1 means count = count + 1."
+      },
+      "learning": {
+        "body": "Augmented assignment; exists for most operators (-=, *=, //=). On lists, += extends in place rather than building a new list."
+      },
+      "comfortable": {
+        "body": "Uses __iadd__ when available (in-place mutation) — which is why aug-assigning a list inside a tuple both mutates and raises."
+      }
+    },
+    "example": {
+      "code": "count = 0\ncount += 1\nprint(count)  # 1"
+    },
+    "gotcha": "On mutable objects += changes the object in place — every other reference to it sees the change."
+  },
+  {
+    "id": "py:operator:equality",
+    "names": [
+      "== (equality)"
+    ],
+    "category": "operator",
+    "selectors": [
+      {
+        "query": "(comparison_operator \"==\" @target)",
+        "priority": 35
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Two equals signs ask a question — \"are these the same value?\" — and answer True or False. One equals sign stores a value instead."
+      },
+      "learning": {
+        "body": "Value equality: compares contents, so [1, 2] == [1, 2] is True even for two separate lists. \"is\" checks identity (same object), which is different."
+      },
+      "comfortable": {
+        "body": "Dispatches to __eq__. Use == for values, \"is\" only for None and sentinels."
+      }
+    },
+    "example": {
+      "code": "x = 5      # assignment\nprint(x == 5)  # True"
+    },
+    "gotcha": "Writing = where you meant == inside a condition is a syntax error in Python — a helpful one."
+  },
+  {
+    "id": "py:operator:floor-div",
+    "names": [
+      "// (floor division)"
+    ],
+    "category": "operator",
+    "selectors": [
+      {
+        "query": "(binary_operator operator: \"//\" @target)",
+        "priority": 40
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Division that throws away the remainder: 7 // 2 is 3. A single slash would give 3.5."
+      },
+      "learning": {
+        "body": "Divides and rounds down (floor). With negatives it keeps rounding down: -7 // 2 is -4, not -3."
+      },
+      "comfortable": {
+        "body": "Floor division, paired with % so that (a // b) * b + a % b == a. Rounds toward negative infinity, unlike C's truncation."
+      }
+    },
+    "example": {
+      "code": "print(7 // 2)   # 3\nprint(7 / 2)    # 3.5"
+    },
+    "gotcha": "It floors, not truncates: -7 // 2 is -4."
+  },
+  {
+    "id": "py:operator:membership",
+    "names": [
+      "in (membership)"
+    ],
+    "category": "operator",
+    "selectors": [
+      {
+        "query": "(comparison_operator \"in\" @target)",
+        "priority": 40
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Asks whether something is inside a collection: \"a\" in \"cat\" is True, 5 in [1, 2, 3] is False."
+      },
+      "learning": {
+        "body": "Membership test for sequences, sets, and dicts (checks keys). \"not in\" is the negation. This is a different \"in\" from the one in a for loop."
+      },
+      "comfortable": {
+        "body": "Dispatches to __contains__; O(1) for sets/dicts, O(n) for lists — the classic reason to convert a lookup list to a set."
+      }
+    },
+    "example": {
+      "code": "vowels = \"aeiou\"\nprint(\"e\" in vowels)  # True"
+    },
+    "gotcha": "On a dict, \"in\" checks keys only — values need \"x in d.values()\"."
+  },
+  {
+    "id": "py:operator:modulo",
+    "names": [
+      "% (modulo)"
+    ],
+    "category": "operator",
+    "selectors": [
+      {
+        "query": "(binary_operator operator: \"%\" @target)",
+        "priority": 40
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Gives the remainder after division: 7 % 2 is 1. Handy for \"is this number even?\" — n % 2 == 0."
+      },
+      "learning": {
+        "body": "Remainder operator; the result takes the sign of the divisor, so -7 % 3 is 2 in Python. Common for wrapping indexes and even/odd checks."
+      },
+      "comfortable": {
+        "body": "Modulo consistent with floor division. On strings it's legacy printf-style formatting — prefer f-strings."
+      }
+    },
+    "example": {
+      "code": "print(7 % 2)   # 1\nprint(8 % 2)   # 0  (even)"
+    },
+    "gotcha": "Sign follows the divisor: -7 % 3 is 2, not -1 — different from many other languages."
+  },
+  {
+    "id": "py:operator:power",
+    "names": [
+      "** (power)"
+    ],
+    "category": "operator",
+    "selectors": [
+      {
+        "query": "(binary_operator operator: \"**\" @target)",
+        "priority": 40
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Raises to a power: 2 ** 3 is 8. Not the same as 2 * 3."
+      },
+      "learning": {
+        "body": "Exponentiation; works with fractional exponents too, so x ** 0.5 is a square root."
+      },
+      "comfortable": {
+        "body": "Right-associative (2 ** 3 ** 2 is 512) and binds tighter than unary minus: -2 ** 2 is -4."
+      }
+    },
+    "example": {
+      "code": "print(2 ** 10)   # 1024\nprint(9 ** 0.5)  # 3.0"
+    },
+    "gotcha": "-2 ** 2 is -4, because ** binds before the minus. Use (-2) ** 2 for 4."
+  },
+  {
+    "id": "py:syntax:class-def",
+    "names": [
+      "class definition",
+      "class"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(class_definition) @target",
+        "priority": 30
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "class defines a blueprint for objects: what data they carry and what they can do. Calling the class like a function — Dog(\"Rex\") — builds a new object from the blueprint."
+      },
+      "learning": {
+        "body": "Bundles data (attributes) with behavior (methods). Parentheses after the name declare a parent class to inherit from."
+      },
+      "comfortable": {
+        "body": "The class body executes top-to-bottom at definition time in its own namespace; assignments there become class attributes shared by all instances."
+      }
+    },
+    "example": {
+      "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return f\"{self.name} says woof\""
+    },
+    "gotcha": "Attributes assigned in the class body (not in __init__) are shared by every instance."
+  },
+  {
+    "id": "py:syntax:decorator",
+    "names": [
+      "decorator",
+      "@something"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(decorator) @target",
+        "priority": 60
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "The @name line above a function wraps that function in extra behavior — the function below gets handed to the decorator, which can change or extend what it does."
+      },
+      "learning": {
+        "body": "Syntax sugar: \"@deco\" above \"def f\" means f = deco(f). The decorator receives the function and returns a (usually enhanced) replacement."
+      },
+      "comfortable": {
+        "body": "Function transformation applied at definition time. Decorators with arguments are factories: @deco(arg) calls deco(arg) first, then applies the result."
+      }
+    },
+    "example": {
+      "code": "@app.route(\"/hello\")\ndef hello():\n    return \"hi\""
+    },
+    "gotcha": "Decorators run at definition time, not call time — side effects happen on import."
+  },
+  {
+    "id": "py:syntax:dict-comprehension",
+    "names": [
+      "dict comprehension",
+      "{k: v for ...}"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(dictionary_comprehension) @target",
+        "priority": 50
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Like a list comprehension, but it builds a dictionary: each pass produces a key and a value, written as key: value before the \"for\"."
+      },
+      "learning": {
+        "body": "Builds a dict from an iterable in one expression. Handy for inverting mappings or reshaping data: {k: v for k, v in pairs}."
+      },
+      "comfortable": {
+        "body": "Dict construction with the comprehension syntax; later keys silently overwrite earlier duplicates."
+      }
+    },
+    "example": {
+      "code": "squares = {n: n * n for n in range(4)}\n# {0: 0, 1: 1, 2: 4, 3: 9}"
+    },
+    "gotcha": "Duplicate keys don't error — the last one quietly wins."
+  },
+  {
+    "id": "py:syntax:dunder-init",
+    "names": [
+      "__init__",
+      "the constructor"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(function_definition name: (identifier) @target (#eq? @target \"__init__\"))",
+        "priority": 70
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "The setup method of a class. It runs automatically every time a new object is created, and it's where the object's starting data gets attached with self."
+      },
+      "learning": {
+        "body": "The initializer: Dog(\"Rex\") creates the object, then calls __init__(self, \"Rex\") on it. Arguments to the class call become arguments to __init__."
+      },
+      "comfortable": {
+        "body": "Initializes an already-created instance (__new__ does the creating). Should assign state and return None — returning anything else raises."
+      }
+    },
+    "example": {
+      "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\nrex = Dog(\"Rex\")"
+    },
+    "gotcha": "It's spelled with two underscores on each side — \"dunder init,\" not \"_init_\"."
+  },
+  {
+    "id": "py:syntax:elif",
+    "names": [
+      "elif"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(elif_clause) @target",
+        "priority": 30
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Short for \"else if\" — another condition to try when the ones above it were false. Only the first true branch in the chain runs."
+      },
+      "learning": {
+        "body": "Chains mutually exclusive conditions without nesting. Order matters: conditions are tested top to bottom and the rest are skipped after a hit."
+      },
+      "comfortable": {
+        "body": "Flat alternative to nested else/if; for many branches on one value, match/case may read better."
+      }
+    },
+    "example": {
+      "code": "if score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelse:\n    grade = \"C\""
+    },
+    "gotcha": "Exactly one branch runs — even if several conditions would have been true."
+  },
+  {
+    "id": "py:syntax:f-string",
+    "names": [
+      "f-string",
+      "f\"...\""
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(string (interpolation)) @target",
+        "priority": 55
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "A string that can contain live values: anything inside {curly braces} is Python code whose result gets inserted into the text."
+      },
+      "learning": {
+        "body": "Formatted string literal — the f prefix makes {expressions} evaluate in place. Supports format specs after a colon, like {price:.2f} for two decimals."
+      },
+      "comfortable": {
+        "body": "Compile-time interpolation; {expr!r} for repr, {expr=} to print the expression and its value — useful for quick debugging."
+      }
+    },
+    "example": {
+      "code": "name = \"Ada\"\nprint(f\"hello, {name}!\")  # hello, Ada!"
+    },
+    "gotcha": "Forget the f prefix and the braces print literally: \"hello, {name}!\"."
+  },
+  {
+    "id": "py:syntax:for",
+    "names": [
+      "for loop",
+      "for ... in"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(for_statement) @target",
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Repeats the indented block once for each item in a collection, putting the current item in the loop variable each time around."
+      },
+      "learning": {
+        "body": "Iterates over anything iterable — lists, strings, files, dicts (their keys). Use enumerate() when you also need the index, and range() for plain counting."
+      },
+      "comfortable": {
+        "body": "Drives the iterator protocol (iter/next). The optional else clause runs only if the loop completed without break."
+      }
+    },
+    "example": {
+      "code": "for letter in \"abc\":\n    print(letter)"
+    },
+    "gotcha": "Looping over a dict gives you its keys, not key–value pairs — use .items() for both."
+  },
+  {
+    "id": "py:syntax:from-import",
+    "names": [
+      "from ... import"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(import_from_statement) @target",
+        "priority": 30
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Pulls specific names out of a module so you can use them directly: after \"from math import sqrt\", you write sqrt(9) with no prefix."
+      },
+      "learning": {
+        "body": "Imports the whole module but binds only the listed names locally. Clearer than import-star, which dumps everything into your namespace."
+      },
+      "comfortable": {
+        "body": "Binds by value at import time: \"from config import DEBUG\" won't see later reassignments of config.DEBUG."
+      }
+    },
+    "example": {
+      "code": "from math import sqrt\nprint(sqrt(16))  # 4.0"
+    },
+    "gotcha": "\"from module import *\" makes it impossible to tell where a name came from — avoid it."
+  },
+  {
+    "id": "py:syntax:function-def",
+    "names": [
+      "function definition",
+      "def"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(function_definition) @target",
+        "priority": 30
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "def creates a reusable named block of code. The names in parentheses are inputs; \"return\" sends a result back out. Nothing runs until the function is called."
+      },
+      "learning": {
+        "body": "Defines a function object and binds it to the name. Parameters can have defaults (x=0); the body runs only on call, in its own local scope."
+      },
+      "comfortable": {
+        "body": "Definition is execution: the def statement runs at import time, evaluating defaults once (hence the mutable-default trap)."
+      }
+    },
+    "example": {
+      "code": "def greet(name):\n    return f\"hello, {name}\"\n\nprint(greet(\"Ada\"))"
+    },
+    "gotcha": "Default values are evaluated once at definition — a mutable default like def f(x=[]) is shared across calls."
+  },
+  {
+    "id": "py:syntax:generator-expression",
+    "names": [
+      "generator expression",
+      "(x for x in ...)"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(generator_expression) @target",
+        "priority": 50
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Looks like a list comprehension with round brackets, but it doesn't build the whole list — it produces items one at a time, as they're asked for."
+      },
+      "learning": {
+        "body": "A lazy comprehension: nothing is computed until something iterates over it. Great for big or infinite sequences because it uses almost no memory."
+      },
+      "comfortable": {
+        "body": "Lazy single-pass iterator. Once consumed it's exhausted — iterate twice and the second pass sees nothing."
+      }
+    },
+    "example": {
+      "code": "total = sum(n * n for n in range(1000))"
+    },
+    "gotcha": "A generator can be consumed only once; a second loop over it gets zero items."
+  },
+  {
+    "id": "py:syntax:import",
+    "names": [
+      "import"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(import_statement) @target",
+        "priority": 30
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Loads another module so you can use its contents, accessed with a dot: after \"import math\", you write math.sqrt(9)."
+      },
+      "learning": {
+        "body": "Runs the module once (results are cached) and binds its name here. \"import x as y\" renames it locally."
+      },
+      "comfortable": {
+        "body": "Module executes top-to-bottom on first import, then comes from sys.modules. Import-time side effects live in that first run."
+      }
+    },
+    "example": {
+      "code": "import math\nprint(math.sqrt(9))  # 3.0"
+    },
+    "gotcha": "Importing runs the module's top-level code — that's why the __main__ guard exists."
+  },
+  {
+    "id": "py:syntax:kwargs",
+    "names": [
+      "**kwargs",
+      "keyword unpacking"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(dictionary_splat_pattern) @target",
+        "priority": 55
+      },
+      {
+        "query": "(dictionary_splat) @target",
+        "priority": 55
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "A double star collects extra name=value arguments into a dictionary (in a def), or spreads a dictionary out into name=value arguments (in a call)."
+      },
+      "learning": {
+        "body": "def f(**kwargs) gathers unexpected keyword arguments into a dict; f(**options) unpacks a dict as keyword arguments. Often used to pass options through to another function."
+      },
+      "comfortable": {
+        "body": "Keyword packing/unpacking; also dict merging: {**a, **b} (last key wins). Order in signatures: positional, *args, keyword-only, **kwargs."
+      }
+    },
+    "example": {
+      "code": "def show(**kwargs):\n    for k, v in kwargs.items():\n        print(k, v)"
+    },
+    "gotcha": "Keys must be valid identifiers when unpacking into a call — {\"my-key\": 1} can't become a keyword argument."
+  },
+  {
+    "id": "py:syntax:lambda",
+    "names": [
+      "lambda",
+      "anonymous function"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(lambda) @target",
+        "priority": 50
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "A tiny unnamed function written in one expression. \"lambda x: x * 2\" means the same as a def that takes x and returns x * 2."
+      },
+      "learning": {
+        "body": "An inline function limited to a single expression, usually passed straight into something like sorted(key=...) or map()."
+      },
+      "comfortable": {
+        "body": "Single-expression closure. If it needs a name or a second line, make it a def."
+      }
+    },
+    "example": {
+      "code": "words = [\"bb\", \"a\", \"ccc\"]\nwords.sort(key=lambda w: len(w))"
+    },
+    "gotcha": "No statements allowed inside — no assignments, no loops, just one expression."
+  },
+  {
+    "id": "py:syntax:list-comprehension",
+    "names": [
+      "list comprehension",
+      "[x for x in ...]"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(list_comprehension) @target",
+        "priority": 50
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "A one-line way to build a new list from an existing one. Read it inside-out: \"for n in numbers\" walks the list, and the part before \"for\" says what to keep."
+      },
+      "learning": {
+        "body": "Builds a list by transforming (and optionally filtering, with a trailing \"if\") each element of an iterable. Equivalent to a for-loop that appends, but shorter and usually faster."
+      },
+      "comfortable": {
+        "body": "Eager list construction from an iterable; add \"if\" clauses to filter. Prefer a plain loop once it stops fitting on one readable line."
+      }
+    },
+    "example": {
+      "code": "numbers = [1, 2, 3]\ndoubled = [n * 2 for n in numbers]  # [2, 4, 6]"
+    },
+    "gotcha": "With parentheses instead of brackets you get a generator, not a list."
+  },
+  {
+    "id": "py:syntax:return",
+    "names": [
+      "return"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(return_statement) @target",
+        "priority": 20
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Ends the function immediately and sends a value back to whoever called it. Code after the return never runs."
+      },
+      "learning": {
+        "body": "Exits with a result; \"return\" with nothing (or falling off the end) returns None. Multiple values come back as a tuple: return a, b."
+      },
+      "comfortable": {
+        "body": "Immediate exit through any enclosing finally blocks (which still run). Distinguish from yield: return ends, yield pauses."
+      }
+    },
+    "example": {
+      "code": "def double(n):\n    return n * 2\n\nresult = double(4)  # 8"
+    },
+    "gotcha": "print shows a value; return gives it back. A function that only prints returns None."
+  },
+  {
+    "id": "py:syntax:self",
+    "names": [
+      "self"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "((identifier) @target (#eq? @target \"self\"))",
+        "guards": [
+          {
+            "guard": "inside",
+            "capture": "@target",
+            "nodeType": "function_definition"
+          },
+          {
+            "guard": "inside",
+            "capture": "@target",
+            "nodeType": "class_definition"
+          }
+        ],
+        "priority": 65
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Inside a class, \"self\" means \"this particular object.\" When you write self.name, you're reading or storing data that belongs to the specific object being used."
+      },
+      "learning": {
+        "body": "The first parameter of a method — Python passes the instance in automatically when you call obj.method(). The name \"self\" is convention, not a keyword."
+      },
+      "comfortable": {
+        "body": "Explicit instance receiver; obj.method(x) is sugar for Cls.method(obj, x). Forgetting it in the signature is the classic \"takes 1 positional argument but 2 were given.\""
+      }
+    },
+    "example": {
+      "code": "class Dog:\n    def __init__(self, name):\n        self.name = name"
+    },
+    "gotcha": "self is not automatic *inside* the class body — every method must list it as the first parameter."
+  },
+  {
+    "id": "py:syntax:slice",
+    "names": [
+      "slice",
+      "[start:stop]"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(slice) @target",
+        "priority": 55
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Square brackets with a colon cut out a piece of a sequence: items[1:3] gives the items at positions 1 and 2. The stop position is not included."
+      },
+      "learning": {
+        "body": "seq[start:stop:step] — any part can be omitted. Negative indexes count from the end, so seq[-2:] is the last two items and seq[::-1] is the sequence reversed."
+      },
+      "comfortable": {
+        "body": "Half-open interval [start, stop) with optional stride; always returns a new object for lists, a view for memoryview/numpy."
+      }
+    },
+    "example": {
+      "code": "letters = [\"a\", \"b\", \"c\", \"d\"]\nprint(letters[1:3])  # ['b', 'c']"
+    },
+    "gotcha": "The stop index is excluded — seq[1:3] is two items, not three."
+  },
+  {
+    "id": "py:syntax:star-args",
+    "names": [
+      "*args",
+      "star unpacking"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(list_splat_pattern) @target",
+        "priority": 55
+      },
+      {
+        "query": "(list_splat) @target",
+        "priority": 55
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "A single star gathers or spreads a sequence. In a def, *args collects any number of extra arguments into a tuple; in a call, *mylist spreads a list out into separate arguments."
+      },
+      "learning": {
+        "body": "Packing and unpacking: def f(*args) accepts variable arguments; f(*seq) unpacks one. Also works in assignment: first, *rest = items."
+      },
+      "comfortable": {
+        "body": "Iterable packing/unpacking. In signatures, a bare * afterward forces keyword-only parameters."
+      }
+    },
+    "example": {
+      "code": "def total(*nums):\n    return sum(nums)\n\nprint(total(1, 2, 3))  # 6"
+    },
+    "gotcha": "Inside the function, args is a plain tuple — the star exists only in the signature and call."
+  },
+  {
+    "id": "py:syntax:string",
+    "names": [
+      "string literal"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(string) @target",
+        "priority": 18
+      }
+    ],
+    "maxLevel": "novice",
+    "levels": {
+      "novice": {
+        "body": "Text in quotes. Single and double quotes mean the same thing; triple quotes let the text span multiple lines."
+      },
+      "learning": {
+        "body": "Text in quotes; single, double, and triple-quoted forms are equivalent."
+      },
+      "comfortable": {
+        "body": "String literal."
+      }
+    },
+    "example": {
+      "code": "message = \"hello\"\npoem = \"\"\"roses are red,\nviolets are blue\"\"\""
+    },
+    "gotcha": "Strings can't be changed in place — every \"modification\" builds a new string."
+  },
+  {
+    "id": "py:syntax:try-except",
+    "names": [
+      "try / except",
+      "exception handling"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(try_statement) @target",
+        "priority": 30
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "try runs code that might fail; if a matching error happens, the except block handles it instead of crashing the program."
+      },
+      "learning": {
+        "body": "Catch specific exception types — except ValueError — rather than everything. else runs when no exception occurred; finally runs no matter what."
+      },
+      "comfortable": {
+        "body": "EAFP style: attempt and handle, rather than pre-check. Bare \"except:\" also swallows KeyboardInterrupt and SystemExit — almost never what you want."
+      }
+    },
+    "example": {
+      "code": "try:\n    n = int(\"abc\")\nexcept ValueError:\n    print(\"not a number\")"
+    },
+    "gotcha": "A bare except hides every error, including typos in your own code — always name the exception."
+  },
+  {
+    "id": "py:syntax:walrus",
+    "names": [
+      "walrus operator",
+      ":="
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(named_expression) @target",
+        "priority": 55
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "The := sign assigns a value and uses it in the same expression — handy for \"check something and keep the result\" in one step."
+      },
+      "learning": {
+        "body": "Assignment expression: \"if (n := len(items)) > 10:\" stores len(items) in n and tests it at once, so you don't compute it twice."
+      },
+      "comfortable": {
+        "body": "Expression-level binding (PEP 572). Best in while-conditions and comprehension filters; anywhere else it usually costs more readability than it saves."
+      }
+    },
+    "example": {
+      "code": "while (line := input()) != \"quit\":\n    print(line)"
+    },
+    "gotcha": "It's an expression, not a statement — a bare \"x := 5\" line is a syntax error without parentheses."
+  },
+  {
+    "id": "py:syntax:while",
+    "names": [
+      "while loop"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(while_statement) @target",
+        "priority": 25
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "Repeats the indented block as long as the condition stays true. Something inside the loop must eventually change the condition, or it runs forever."
+      },
+      "learning": {
+        "body": "Condition-driven repetition — use it when you don't know the number of passes in advance. break exits early; continue skips to the next check."
+      },
+      "comfortable": {
+        "body": "Pre-test loop; \"while True\" with an internal break is the idiomatic loop-and-a-half for read-then-decide patterns."
+      }
+    },
+    "example": {
+      "code": "n = 3\nwhile n > 0:\n    print(n)\n    n -= 1"
+    },
+    "gotcha": "Forgetting to update the condition variable is the classic infinite loop."
+  },
+  {
+    "id": "py:syntax:with",
+    "names": [
+      "with statement",
+      "context manager"
+    ],
+    "category": "syntax",
+    "selectors": [
+      {
+        "query": "(with_statement) @target",
+        "priority": 30
+      }
+    ],
+    "levels": {
+      "novice": {
+        "body": "with opens something that needs cleanup — like a file — and guarantees it gets closed when the block ends, even if an error happens inside."
+      },
+      "learning": {
+        "body": "Runs a block under a context manager: setup on entry, guaranteed teardown on exit. \"as f\" names whatever the manager hands you."
+      },
+      "comfortable": {
+        "body": "Sugar for try/finally around __enter__/__exit__. Multiple managers can share one with; contextlib builds them from generators."
+      }
+    },
+    "example": {
+      "code": "with open(\"notes.txt\") as f:\n    text = f.read()"
+    },
+    "gotcha": "The variable after \"as\" still exists after the block — but the resource behind it is already closed."
+  }
+]

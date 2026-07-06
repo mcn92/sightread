@@ -1,0 +1,44 @@
+{
+  "id": "py:syntax:while",
+  "names": [
+    "while loop"
+  ],
+  "category": "syntax",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(while_statement) @target",
+      "priority": 25
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Repeats the indented block as long as the condition stays true. Something inside the loop must eventually change the condition, or it runs forever.",
+      "example": {
+        "code": "n = 3\nwhile n > 0:\n    print(n)\n    n -= 1",
+        "expected_output": null
+      },
+      "gotcha": "Forgetting to update the condition variable is the classic infinite loop."
+    },
+    "learning": {
+      "body": "Condition-driven repetition — use it when you don't know the number of passes in advance. break exits early; continue skips to the next check.",
+      "example": {
+        "code": "n = 3\nwhile n > 0:\n    print(n)\n    n -= 1",
+        "expected_output": null
+      },
+      "gotcha": "Forgetting to update the condition variable is the classic infinite loop."
+    },
+    "comfortable": {
+      "body": "Pre-test loop; \"while True\" with an internal break is the idiomatic loop-and-a-half for read-then-decide patterns.",
+      "example": {
+        "code": "n = 3\nwhile n > 0:\n    print(n)\n    n -= 1",
+        "expected_output": null
+      },
+      "gotcha": "Forgetting to update the condition variable is the classic infinite loop."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}

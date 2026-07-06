@@ -1,0 +1,44 @@
+{
+  "id": "py:operator:aug-assign",
+  "names": [
+    "+= (add and assign)"
+  ],
+  "category": "operator",
+  "level_gate": {},
+  "selectors": [
+    {
+      "query": "(augmented_assignment operator: \"+=\" @target)",
+      "priority": 40
+    }
+  ],
+  "related": [],
+  "explanations": {
+    "novice": {
+      "body": "Shorthand for \"add to what's already there\": count += 1 means count = count + 1.",
+      "example": {
+        "code": "count = 0\ncount += 1\nprint(count)  # 1",
+        "expected_output": null
+      },
+      "gotcha": "On mutable objects += changes the object in place — every other reference to it sees the change."
+    },
+    "learning": {
+      "body": "Augmented assignment; exists for most operators (-=, *=, //=). On lists, += extends in place rather than building a new list.",
+      "example": {
+        "code": "count = 0\ncount += 1\nprint(count)  # 1",
+        "expected_output": null
+      },
+      "gotcha": "On mutable objects += changes the object in place — every other reference to it sees the change."
+    },
+    "comfortable": {
+      "body": "Uses __iadd__ when available (in-place mutation) — which is why aug-assigning a list inside a tuple both mutates and raises.",
+      "example": {
+        "code": "count = 0\ncount += 1\nprint(count)  # 1",
+        "expected_output": null
+      },
+      "gotcha": "On mutable objects += changes the object in place — every other reference to it sees the change."
+    }
+  },
+  "provenance": {
+    "examples": "original"
+  }
+}
