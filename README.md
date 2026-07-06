@@ -11,6 +11,7 @@ npm install
 npm run dev        # http://localhost:5173
 npm test           # resolver fixture tests (node)
 npm run pack:build # compile packs/py/src into packs/py/build/v0
+npm run budget     # verify entry bundle stays inside the M1 app-shell budget
 npm run build      # production build in dist/
 ```
 

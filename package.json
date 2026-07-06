@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run pack:build && tsc -b && vite build",
+    "build": "npm run pack:build && tsc -b && vite build && npm run budget",
+    "budget": "node tools/check-bundle-budget.mjs",
     "lint": "oxlint",
     "pack:build": "node tools/compile-pack.mjs",
     "pack:migrate:m0": "node tools/compile-pack.mjs --migrate-m0",
