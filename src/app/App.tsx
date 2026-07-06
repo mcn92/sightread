@@ -1,7 +1,8 @@
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { SAMPLE_CODE, useAppStore } from './store';
 import { LEVELS, type Level } from '../resolve/types';
 import { Challenge } from '../challenge/Challenge';
+import { recordLevelChanged, recordSnippetLoaded } from '../analytics/events';
 
 const Reader = lazy(() => import('../reader/Reader').then((module) => ({ default: module.Reader })));
 
@@ -19,6 +20,10 @@ export function App() {
   const [pasteOpen, setPasteOpen] = useState(false);
   const [draft, setDraft] = useState('');
 
+  useEffect(() => {
+    recordSnippetLoaded('sample', SAMPLE_CODE);
+  }, []);
+
   return (
     <div className="sr-app">
       <header className="sr-header">
@@ -33,7 +38,10 @@ export function App() {
               role="radio"
               aria-checked={level === l}
               className={level === l ? 'sr-level sr-level-active' : 'sr-level'}
-              onClick={() => setLevel(l)}
+              onClick={() => {
+                recordLevelChanged(level, l);
+                setLevel(l);
+              }}
             >
               {LEVEL_LABEL[l]}
             </button>
@@ -60,6 +68,7 @@ export function App() {
             onClick={() => {
               setMode('reader');
               setCode(SAMPLE_CODE);
+              recordSnippetLoaded('sample', SAMPLE_CODE);
             }}
           >
             Load sample
@@ -96,6 +105,7 @@ export function App() {
               onClick={() => {
                 setMode('reader');
                 setCode(draft);
+                recordSnippetLoaded('paste', draft);
                 setPasteOpen(false);
               }}
             >

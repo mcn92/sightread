@@ -1,5 +1,11 @@
-import { useEffect, useMemo, useState, type ComponentType } from 'react';
+import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
 import { useAppStore } from '../app/store';
+import {
+  recordChallengeCompleted,
+  recordChallengeShared,
+  recordChallengeStarted,
+  recordSnippetLoaded,
+} from '../analytics/events';
 
 export interface DailyChallenge {
   id: string;
@@ -30,6 +36,8 @@ export function Challenge({ Reader }: ChallengeProps) {
   const [submitted, setSubmitted] = useState(false);
   const [lookups, setLookups] = useState(0);
   const [shareCopied, setShareCopied] = useState(false);
+  const startedRef = useRef(false);
+  const startedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -39,6 +47,7 @@ export function Challenge({ Reader }: ChallengeProps) {
         if (cancelled) return;
         setChallenge(nextChallenge);
         setCode(nextChallenge.snippet);
+        recordSnippetLoaded('challenge', nextChallenge.snippet);
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -55,6 +64,13 @@ export function Challenge({ Reader }: ChallengeProps) {
     if (!challenge || !submitted) return '';
     return buildShareText(challenge, Boolean(correct), lookups);
   }, [challenge, correct, lookups, submitted]);
+
+  function markStarted() {
+    if (startedRef.current || !challenge) return;
+    startedRef.current = true;
+    startedAtRef.current = performance.now();
+    recordChallengeStarted(challenge.id);
+  }
 
   if (loadError) {
     return <div className="sr-challenge-panel">Daily challenge is unavailable: {loadError}</div>;
@@ -76,7 +92,13 @@ export function Challenge({ Reader }: ChallengeProps) {
         <div className="sr-challenge-stat">{lookups} lookups</div>
       </div>
 
-      <Reader surface="challenge" onLookup={() => setLookups((value) => value + 1)} />
+      <Reader
+        surface="challenge"
+        onLookup={() => {
+          markStarted();
+          setLookups((value) => value + 1);
+        }}
+      />
 
       <div className="sr-choices" role="radiogroup" aria-label="Challenge answers">
         {challenge.choices.map((choice, index) => {
@@ -98,7 +120,10 @@ export function Challenge({ Reader }: ChallengeProps) {
                 .filter(Boolean)
                 .join(' ')}
               disabled={submitted}
-              onClick={() => setSelected(index)}
+              onClick={() => {
+                markStarted();
+                setSelected(index);
+              }}
             >
               <span>{String.fromCharCode(65 + index)}</span>
               {choice}
@@ -113,7 +138,16 @@ export function Challenge({ Reader }: ChallengeProps) {
             type="button"
             className="sr-btn sr-btn-primary"
             disabled={selected == null}
-            onClick={() => setSubmitted(true)}
+            onClick={() => {
+              const isCorrect = selected === challenge.answer_index;
+              recordChallengeCompleted(
+                challenge.id,
+                isCorrect,
+                lookups,
+                performance.now() - (startedAtRef.current ?? performance.now()),
+              );
+              setSubmitted(true);
+            }}
           >
             Submit answer
           </button>
@@ -127,7 +161,10 @@ export function Challenge({ Reader }: ChallengeProps) {
               className="sr-btn sr-btn-primary"
               onClick={() =>
                 shareChallenge(shareText)
-                  .then((copied) => setShareCopied(copied))
+                  .then((method) => {
+                    recordChallengeShared(challenge.id, method);
+                    setShareCopied(method === 'copy');
+                  })
                   .catch((err: unknown) => {
                     console.warn('sightread: challenge share failed', err);
                   })
@@ -162,9 +199,9 @@ function buildShareText(challenge: DailyChallenge, correct: boolean, lookups: nu
 async function shareChallenge(text: string) {
   if (navigator.share) {
     await navigator.share({ text });
-    return false;
+    return 'native_share';
   }
 
   await navigator.clipboard.writeText(text);
-  return true;
+  return 'copy';
 }

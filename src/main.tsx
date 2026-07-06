@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { App } from './app/App';
 import { registerServiceWorker } from './registerServiceWorker';
+import { recordAppOpened } from './analytics/events';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -10,4 +11,5 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
+recordAppOpened();
 registerServiceWorker();

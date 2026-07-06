@@ -10,6 +10,7 @@ import { ResolverEngine, type MatchIndex } from '../resolve/engine';
 import type { Range, ResolvedCard } from '../resolve/types';
 import { useAppStore } from '../app/store';
 import { loadPythonPack } from '../packs/loadPack';
+import { recordLookup } from '../analytics/events';
 import { Card } from './Card';
 
 // ── decorations: one mark class over every tappable range (spec §6.6) ──────
@@ -85,12 +86,17 @@ export function Reader({ surface = 'reader', onLookup }: ReaderProps) {
   const viewRef = useRef<EditorView | null>(null);
   const indexRef = useRef<MatchIndex | null>(null);
   const onLookupRef = useRef(onLookup);
+  const surfaceRef = useRef(surface);
   const [open, setOpen] = useState<OpenCard | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     onLookupRef.current = onLookup;
   }, [onLookup]);
+
+  useEffect(() => {
+    surfaceRef.current = surface;
+  }, [surface]);
 
   // (Re)build the editor whenever the code changes.
   useEffect(() => {
@@ -140,6 +146,7 @@ export function Reader({ surface = 'reader', onLookup }: ReaderProps) {
       });
 
     function handleTap(pos: number | null, v: EditorView) {
+      const start = performance.now();
       const index = indexRef.current;
       if (pos == null || !index) {
         setOpen(null);
@@ -150,6 +157,7 @@ export function Reader({ surface = 'reader', onLookup }: ReaderProps) {
         setOpen(null);
         return;
       }
+      recordLookup(resolved, surfaceRef.current, performance.now() - start);
       onLookupRef.current?.();
       const coords = v.coordsAtPos(resolved.range.from);
       const wrapperBox = parent!.getBoundingClientRect();
