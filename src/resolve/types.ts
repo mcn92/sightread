@@ -57,6 +57,7 @@ export type ResolvedCard =
       kind: 'shadow'; // I5: a name shadows a known builtin — say so, never pretend
       name: string;
       shadowedConcept: Concept;
+      definitionLine: number;
       range: Range;
     }
   | { kind: 'lexical'; text: string; nodeType: string; range: Range };

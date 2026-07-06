@@ -54,7 +54,8 @@ export function Card({ card, level, onClose, onShowConcept }: CardProps) {
             <mark>{card.name}</mark>
           </h2>
           <p className="sr-card-body">
-            Here, <code>{card.name}</code> has been given a value of its own earlier in this
+            Here, <code>{card.name}</code> has been given a value of its own on line{' '}
+            {card.definitionLine} of this
             file — so it refers to that local variable, not the built-in{' '}
             <code>{card.shadowedConcept.names[0]}</code>.
           </p>

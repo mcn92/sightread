@@ -25,6 +25,7 @@ interface Candidate {
   priority: number;
   range: Range;
   span: number;
+  definitionLine?: number;
 }
 
 export class ResolverEngine {
@@ -64,6 +65,7 @@ export class ResolverEngine {
         if (!target) continue;
 
         let kind: Candidate['kind'] = 'concept';
+        let definitionLine: number | undefined;
         let pass = true;
         for (const guard of sel.guards) {
           const capturedName = guard.capture.replace(/^@/, '');
@@ -73,9 +75,10 @@ export class ResolverEngine {
             break;
           }
           const result = checkGuard(guard, captured, bindings, this.config);
-          if (result === 'fail_shadowed') {
+          if (result.kind === 'fail_shadowed') {
             kind = 'shadow'; // I5: degrade to the honest card, don't go silent
-          } else if (result === 'fail') {
+            definitionLine = result.binding.line;
+          } else if (result.kind === 'fail') {
             pass = false;
             break;
           }
@@ -92,6 +95,7 @@ export class ResolverEngine {
           priority: sel.priority,
           range: { from: target.startIndex, to: target.endIndex },
           span: target.endIndex - target.startIndex,
+          definitionLine,
         };
         const list = byNode.get(target.id);
         if (list) list.push(candidate);
@@ -175,6 +179,7 @@ export class MatchIndex {
           kind: 'shadow',
           name: this.tree.rootNode.descendantForIndex(winner.range.from)?.text ?? '',
           shadowedConcept: winner.concept,
+          definitionLine: winner.definitionLine ?? 1,
           range: winner.range,
         };
       }

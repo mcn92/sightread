@@ -74,6 +74,7 @@ describe('resolution (spec §6.2)', () => {
     expect(card?.kind).toBe('shadow');
     if (card?.kind === 'shadow') {
       expect(card.shadowedConcept.id).toBe('py:builtin:len');
+      expect(card.definitionLine).toBe(3);
     }
   });
 

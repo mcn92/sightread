@@ -5,14 +5,22 @@ import type { Node, Tree } from 'web-tree-sitter';
 import type { GuardSpec } from './types';
 import type { LangConfig } from './langConfig';
 
-/** scope node id → set of names bound in that scope. Built once per parse. */
-export type BindingIndex = Map<number, Set<string>>;
+export interface BindingInfo {
+  line: number;
+}
 
-function collectIdentifiers(node: Node, into: Set<string>): void {
+/** scope node id → bound name → first definition location. Built once per parse. */
+export type BindingIndex = Map<number, Map<string, BindingInfo>>;
+
+function addBinding(into: Map<string, BindingInfo>, name: string, node: Node): void {
+  if (!into.has(name)) into.set(name, { line: node.startPosition.row + 1 });
+}
+
+function collectIdentifiers(node: Node, into: Map<string, BindingInfo>): void {
   if (node.type === 'identifier' || node.type === 'dotted_name') {
     // For dotted imports (import os.path) the bound name is the first segment.
     const text = node.type === 'dotted_name' ? node.text.split('.')[0] : node.text;
-    into.add(text);
+    addBinding(into, text, node);
     if (node.type === 'dotted_name') return;
   }
   for (let i = 0; i < node.namedChildCount; i++) {
@@ -41,7 +49,7 @@ export function buildBindingIndex(tree: Tree, config: LangConfig): BindingIndex 
       const scopeId = enclosingScopeId(node, config);
       let names = index.get(scopeId);
       if (!names) {
-        names = new Set();
+        names = new Map();
         index.set(scopeId, names);
       }
       if (rule.nameField === '*') {
@@ -60,14 +68,15 @@ export function buildBindingIndex(tree: Tree, config: LangConfig): BindingIndex 
   return index;
 }
 
-function isLocallyBound(node: Node, bindings: BindingIndex, config: LangConfig): boolean {
+function localBinding(node: Node, bindings: BindingIndex, config: LangConfig): BindingInfo | null {
   const name = node.text;
   let cur: Node | null = node;
   while (cur) {
-    if (config.scopeNodes.has(cur.type) && bindings.get(cur.id)?.has(name)) return true;
+    const binding = config.scopeNodes.has(cur.type) ? bindings.get(cur.id)?.get(name) : undefined;
+    if (binding) return binding;
     cur = cur.parent;
   }
-  return false;
+  return null;
 }
 
 function hasAncestorOfType(node: Node, type: string): boolean {
@@ -79,7 +88,10 @@ function hasAncestorOfType(node: Node, type: string): boolean {
   return false;
 }
 
-export type GuardResult = 'pass' | 'fail' | 'fail_shadowed';
+export type GuardResult =
+  | { kind: 'pass' }
+  | { kind: 'fail' }
+  | { kind: 'fail_shadowed'; binding: BindingInfo };
 
 export function checkGuard(
   spec: GuardSpec,
@@ -90,15 +102,18 @@ export function checkGuard(
   switch (spec.guard) {
     case 'not_locally_bound':
       // Distinguished failure: the caller turns this into the honest shadow card (I5).
-      return isLocallyBound(captured, bindings, config) ? 'fail_shadowed' : 'pass';
+      {
+        const binding = localBinding(captured, bindings, config);
+        return binding ? { kind: 'fail_shadowed', binding } : { kind: 'pass' };
+      }
     case 'is_callee': {
       const parent = captured.parent;
       const ok = parent?.type === 'call' && parent.childForFieldName('function')?.id === captured.id;
-      return ok ? 'pass' : 'fail';
+      return ok ? { kind: 'pass' } : { kind: 'fail' };
     }
     case 'inside':
-      return hasAncestorOfType(captured, spec.nodeType) ? 'pass' : 'fail';
+      return hasAncestorOfType(captured, spec.nodeType) ? { kind: 'pass' } : { kind: 'fail' };
     case 'not_inside':
-      return hasAncestorOfType(captured, spec.nodeType) ? 'fail' : 'pass';
+      return hasAncestorOfType(captured, spec.nodeType) ? { kind: 'fail' } : { kind: 'pass' };
   }
 }
