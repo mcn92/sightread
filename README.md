@@ -40,6 +40,8 @@ npm run build      # production build in dist/
 - The browser runtime loads the generated Python pack from `public/packs/py/v0`.
   The old hardcoded `src/resolve/concepts.ts` corpus remains only as the M0
   migration source and resolver test fixture for now.
+- Production builds register a small service worker that caches the app shell,
+  built assets, WASM, and immutable `/packs/py/v0` files after first load.
 - The current corpus has also been migrated into `packs/py/src/concepts/**/*.yaml`.
   Rebuild generated pack artifacts with `npm run pack:build`; this writes ignored
   staging output to `packs/py/build/v0` and served runtime output to
