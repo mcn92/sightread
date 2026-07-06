@@ -125,6 +125,18 @@ describe('resolution (spec §6.2)', () => {
     if (card?.kind === 'concept') expect(card.concept.id).toBe('py:builtin:sum');
   });
 
+  it('prefers nested concepts over outer statement concepts at the tap point', () => {
+    const code = `if True:
+    for x in [1, 2]:
+        print(sum([x]))
+`;
+    const nestedIndex = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG).index(parsePython(code));
+    const sumOffset = code.indexOf('sum');
+    const card = nestedIndex.resolveAt(sumOffset, 'novice');
+    expect(card?.kind).toBe('concept');
+    if (card?.kind === 'concept') expect(card.concept.id).toBe('py:builtin:sum');
+  });
+
   it('resolves f-string text to the f-string concept', () => {
     const card = index.resolveAt(at('total:'), 'novice');
     expect(card?.kind).toBe('concept');

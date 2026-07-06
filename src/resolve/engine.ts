@@ -29,6 +29,10 @@ interface Candidate {
   definitionLine?: number;
 }
 
+interface RankedCandidate extends Candidate {
+  tapDepth: number;
+}
+
 export class ResolverEngine {
   private compiled: CompiledSelector[] = [];
   private config: LangConfig;
@@ -165,10 +169,11 @@ export class MatchIndex {
     }
 
     // Step 3: collect matching candidates along the chain.
-    const candidates: Candidate[] = [];
-    for (const node of chain) {
+    const candidates: RankedCandidate[] = [];
+    for (let depth = 0; depth < chain.length; depth += 1) {
+      const node = chain[depth];
       const list = this.byNode.get(node.id);
-      if (list) candidates.push(...list);
+      if (list) candidates.push(...list.map((candidate) => ({ ...candidate, tapDepth: depth })));
     }
 
     // Step 5 folded into ranking: level-gated concepts fall through (spec §6.2 step 5).
@@ -176,8 +181,12 @@ export class MatchIndex {
       (c) => c.kind === 'shadow' || levelAllows(c.concept, level),
     );
 
-    // Step 4: priority desc, then smallest span (most specific).
-    eligible.sort((a, b) => b.priority - a.priority || a.span - b.span);
+    // Step 4: high-priority idioms may beat parts; otherwise nearest tapped node wins.
+    eligible.sort((a, b) => {
+      const aIdiom = a.priority >= 80 ? 1 : 0;
+      const bIdiom = b.priority >= 80 ? 1 : 0;
+      return bIdiom - aIdiom || a.tapDepth - b.tapDepth || b.priority - a.priority || a.span - b.span;
+    });
     const winner = eligible[0];
 
     if (winner) {
