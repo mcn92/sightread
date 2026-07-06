@@ -39,17 +39,28 @@ interface StoredEvent {
 const DEVICE_KEY = 'sightread:analytics:device_id';
 const OPENED_KEY = 'sightread:analytics:opened';
 const EVENTS_KEY = 'sightread:analytics:events';
+const PAGE_OPEN_KEY = `sightread:analytics:page_opened:${performance.timeOrigin}`;
 const MAX_BUFFERED_EVENTS = 500;
 
 const sessionId = createId();
+const recentSnippetLoads = new Map<string, number>();
 
 export function recordAppOpened() {
+  if (sessionStorage.getItem(PAGE_OPEN_KEY) === '1') return;
+  sessionStorage.setItem(PAGE_OPEN_KEY, '1');
+
   const firstEver = localStorage.getItem(OPENED_KEY) !== '1';
   localStorage.setItem(OPENED_KEY, '1');
   trackEvent({ name: 'app_opened', props: { entry: detectEntrySource(), first_ever: firstEver } });
 }
 
 export function recordSnippetLoaded(source: SnippetSource, code: string, parseOk = true) {
+  const dedupeKey = `${source}:${hashString(code)}`;
+  const now = performance.now();
+  const last = recentSnippetLoads.get(dedupeKey);
+  if (last != null && now - last < 1000) return;
+  recentSnippetLoads.set(dedupeKey, now);
+
   trackEvent({
     name: 'snippet_loaded',
     props: {
@@ -188,4 +199,13 @@ function bucketChallengeLookups(lookups: number) {
 
 function createId() {
   return crypto.randomUUID();
+}
+
+function hashString(input: string) {
+  let value = 2166136261;
+  for (let i = 0; i < input.length; i += 1) {
+    value ^= input.charCodeAt(i);
+    value = Math.imul(value, 16777619);
+  }
+  return value >>> 0;
 }

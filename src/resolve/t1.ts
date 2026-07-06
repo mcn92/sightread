@@ -24,6 +24,13 @@ class DisabledT1Search implements T1Search {
   }
 }
 
+class MissOnlyT1Search implements T1Search {
+  enabled = true;
+  search(): T1Hit | null {
+    return null;
+  }
+}
+
 class PancakeT1Search implements T1Search {
   enabled = true;
   private index: PancakeIndex;
@@ -71,6 +78,11 @@ export async function loadT1Search(
   if (index.count !== conceptsByOrdinal.length) {
     index.dispose();
     throw new Error(`pancake index count ${index.count} does not match ${conceptsByOrdinal.length} concepts`);
+  }
+
+  if (manifest.embedding_model.id === 'sightread-hash-embedding-v0') {
+    index.dispose();
+    return new MissOnlyT1Search();
   }
 
   return new PancakeT1Search(index, conceptsByOrdinal, manifest.t1_threshold);
