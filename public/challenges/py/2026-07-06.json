@@ -1,0 +1,17 @@
+{
+  "id": "py-2026-07-06",
+  "number": 1,
+  "lang": "py",
+  "date": "2026-07-06",
+  "snippet": "scores = [3, 5, 8]\nbonus = 2\n\nresult = [score + bonus for score in scores if score > 3]\nprint(result)",
+  "question": "What does this print?",
+  "choices": ["[5, 7, 10]", "[7, 10]", "[3, 5, 8, 2]", "[5, 8]"],
+  "answer_index": 1,
+  "tappable_concepts": [
+    "py:syntax:assignment",
+    "py:syntax:list",
+    "py:syntax:list-comprehension",
+    "py:operator:greater-than",
+    "py:builtin:print"
+  ]
+}

@@ -1,8 +1,10 @@
 const CACHE_VERSION = 'sightread-m1-sw-v1';
 const APP_CACHE = `${CACHE_VERSION}:app`;
 const PACK_CACHE = `${CACHE_VERSION}:packs`;
+const CHALLENGE_CACHE = `${CACHE_VERSION}:challenges`;
 const CORE_ASSETS = ['/', '/index.html', '/web-tree-sitter.wasm'];
 const PACK_PREFIX = '/packs/py/v0/';
+const CHALLENGE_PREFIX = '/challenges/';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -38,6 +40,11 @@ self.addEventListener('fetch', (event) => {
 
   if (url.pathname.startsWith(PACK_PREFIX)) {
     event.respondWith(cacheFirst(request, PACK_CACHE));
+    return;
+  }
+
+  if (url.pathname.startsWith(CHALLENGE_PREFIX)) {
+    event.respondWith(networkFirst(request, CHALLENGE_CACHE));
     return;
   }
 

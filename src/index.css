@@ -178,6 +178,108 @@ body {
   pointer-events: none;
 }
 
+/* ── daily challenge ── */
+.sr-challenge {
+  display: grid;
+  gap: 12px;
+}
+.sr-challenge-panel {
+  background: var(--sr-panel);
+  border: 1px solid var(--sr-line);
+  border-radius: 10px;
+  color: var(--sr-muted);
+  font-size: 14px;
+  padding: 18px;
+}
+.sr-challenge-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sr-challenge-kicker {
+  margin: 0 0 4px;
+  color: var(--sr-amber);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sr-challenge-title {
+  margin: 0;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
+}
+.sr-challenge-stat {
+  flex: 0 0 auto;
+  color: var(--sr-muted);
+  font-size: 13px;
+}
+.sr-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.sr-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border: 1px solid var(--sr-line);
+  border-radius: 8px;
+  background: var(--sr-panel);
+  color: var(--sr-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 12px;
+  text-align: left;
+}
+.sr-choice span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sr-text) 9%, transparent);
+  color: var(--sr-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.sr-choice:hover,
+.sr-choice-selected {
+  border-color: var(--sr-amber);
+}
+.sr-choice-correct {
+  border-color: var(--sr-teal);
+  background: color-mix(in srgb, var(--sr-teal) 16%, var(--sr-panel));
+}
+.sr-choice-wrong {
+  border-color: #c76b5a;
+  background: color-mix(in srgb, #c76b5a 16%, var(--sr-panel));
+}
+.sr-choice:disabled {
+  cursor: default;
+}
+.sr-challenge-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.sr-result {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.sr-result-correct {
+  color: var(--sr-teal);
+}
+.sr-result-wrong {
+  color: #e39a8d;
+}
+
 /* The signature: everything underlined is askable. */
 .sr-tap {
   border-bottom: 1.5px dashed color-mix(in srgb, var(--sr-amber) 55%, transparent);
@@ -320,5 +422,19 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .sr-tap {
     transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .sr-choices {
+    grid-template-columns: 1fr;
+  }
+  .sr-challenge-head,
+  .sr-challenge-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .sr-challenge-stat {
+    align-self: flex-start;
   }
 }

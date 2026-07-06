@@ -1,6 +1,7 @@
 import { Suspense, lazy, useState } from 'react';
 import { SAMPLE_CODE, useAppStore } from './store';
 import { LEVELS, type Level } from '../resolve/types';
+import { Challenge } from '../challenge/Challenge';
 
 const Reader = lazy(() => import('../reader/Reader').then((module) => ({ default: module.Reader })));
 
@@ -14,6 +15,7 @@ export function App() {
   const level = useAppStore((s) => s.level);
   const setLevel = useAppStore((s) => s.setLevel);
   const setCode = useAppStore((s) => s.setCode);
+  const [mode, setMode] = useState<'reader' | 'challenge'>('reader');
   const [pasteOpen, setPasteOpen] = useState(false);
   const [draft, setDraft] = useState('');
 
@@ -44,10 +46,31 @@ export function App() {
           Tap anything <span className="sr-hint-underline">underlined</span> to see what it means.
         </p>
         <div className="sr-toolbar-actions">
-          <button className="sr-btn" onClick={() => setCode(SAMPLE_CODE)}>
+          <button
+            className="sr-btn"
+            onClick={() => {
+              setMode('challenge');
+              setPasteOpen(false);
+            }}
+          >
+            Daily challenge
+          </button>
+          <button
+            className="sr-btn"
+            onClick={() => {
+              setMode('reader');
+              setCode(SAMPLE_CODE);
+            }}
+          >
             Load sample
           </button>
-          <button className="sr-btn sr-btn-primary" onClick={() => setPasteOpen(true)}>
+          <button
+            className="sr-btn sr-btn-primary"
+            onClick={() => {
+              setMode('reader');
+              setPasteOpen(true);
+            }}
+          >
             Paste your own
           </button>
         </div>
@@ -71,6 +94,7 @@ export function App() {
               className="sr-btn sr-btn-primary"
               disabled={draft.trim().length === 0}
               onClick={() => {
+                setMode('reader');
                 setCode(draft);
                 setPasteOpen(false);
               }}
@@ -83,7 +107,7 @@ export function App() {
 
       <main className="sr-main">
         <Suspense fallback={<div className="sr-reader sr-reader-loading">loading reader…</div>}>
-          <Reader />
+          {mode === 'challenge' ? <Challenge Reader={Reader} /> : <Reader />}
         </Suspense>
       </main>
 

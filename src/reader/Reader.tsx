@@ -73,14 +73,24 @@ interface OpenCard {
   anchor: { left: number; top: number; bottom: number };
 }
 
-export function Reader() {
+interface ReaderProps {
+  surface?: 'reader' | 'challenge';
+  onLookup?: () => void;
+}
+
+export function Reader({ surface = 'reader', onLookup }: ReaderProps) {
   const code = useAppStore((s) => s.code);
   const level = useAppStore((s) => s.level);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const indexRef = useRef<MatchIndex | null>(null);
+  const onLookupRef = useRef(onLookup);
   const [open, setOpen] = useState<OpenCard | null>(null);
   const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    onLookupRef.current = onLookup;
+  }, [onLookup]);
 
   // (Re)build the editor whenever the code changes.
   useEffect(() => {
@@ -140,6 +150,7 @@ export function Reader() {
         setOpen(null);
         return;
       }
+      onLookupRef.current?.();
       const coords = v.coordsAtPos(resolved.range.from);
       const wrapperBox = parent!.getBoundingClientRect();
       setOpen({
@@ -196,7 +207,7 @@ export function Reader() {
       : undefined;
 
   return (
-    <div className="sr-reader" ref={wrapperRef}>
+    <div className="sr-reader" data-surface={surface} ref={wrapperRef}>
       {!ready && <div className="sr-loading">warming up the reader…</div>}
       {open && (
         <div className={isNarrow ? 'sr-sheet' : 'sr-popover'} style={cardStyle}>
