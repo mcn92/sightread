@@ -1,12 +1,17 @@
 import type { Concept } from './types';
 import type { T1Hit, T1Search } from './t1';
 
+export interface T1Alias {
+  from: string;
+  to: string;
+}
+
 class TrustedAliasT1Search implements T1Search {
   enabled = true;
   private aliases: Map<string, Concept>;
 
-  constructor(conceptsByOrdinal: Concept[]) {
-    this.aliases = buildTrustedAliases(conceptsByOrdinal);
+  constructor(conceptsByOrdinal: Concept[], packAliases: T1Alias[] = []) {
+    this.aliases = buildTrustedAliases(conceptsByOrdinal, packAliases);
   }
 
   search(query: string): T1Hit | null {
@@ -18,26 +23,11 @@ class TrustedAliasT1Search implements T1Search {
   }
 }
 
-export function createTrustedAliasT1Search(conceptsByOrdinal: Concept[]): T1Search {
-  return new TrustedAliasT1Search(conceptsByOrdinal);
+export function createTrustedAliasT1Search(conceptsByOrdinal: Concept[], aliases: T1Alias[] = []): T1Search {
+  return new TrustedAliasT1Search(conceptsByOrdinal, aliases);
 }
 
-const TRUSTED_PY_ALIASES: Record<string, string> = {
-  prnt: 'py:builtin:print',
-  pritn: 'py:builtin:print',
-  pirnt: 'py:builtin:print',
-  lne: 'py:builtin:len',
-  lenght: 'py:builtin:len',
-  length: 'py:builtin:len',
-  raneg: 'py:builtin:range',
-  enuerate: 'py:builtin:enumerate',
-  enumerte: 'py:builtin:enumerate',
-  isintance: 'py:builtin:isinstance',
-  isntance: 'py:builtin:isinstance',
-  sroted: 'py:builtin:sorted',
-};
-
-function buildTrustedAliases(concepts: Concept[]): Map<string, Concept> {
+function buildTrustedAliases(concepts: Concept[], packAliases: T1Alias[]): Map<string, Concept> {
   const byId = new Map(concepts.map((concept) => [concept.id, concept]));
   const aliases = new Map<string, Concept>();
 
@@ -48,9 +38,10 @@ function buildTrustedAliases(concepts: Concept[]): Map<string, Concept> {
     }
   }
 
-  for (const [alias, conceptId] of Object.entries(TRUSTED_PY_ALIASES)) {
-    const concept = byId.get(conceptId);
-    if (concept) aliases.set(alias, concept);
+  for (const alias of packAliases) {
+    const concept = byId.get(alias.to);
+    const normalized = normalizeAlias(alias.from);
+    if (concept && normalized) aliases.set(normalized, concept);
   }
 
   return aliases;

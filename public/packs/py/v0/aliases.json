@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "from": "prnt",
+    "to": "py:builtin:print"
+  },
+  {
+    "from": "pritn",
+    "to": "py:builtin:print"
+  },
+  {
+    "from": "pirnt",
+    "to": "py:builtin:print"
+  },
+  {
+    "from": "lne",
+    "to": "py:builtin:len"
+  },
+  {
+    "from": "lenght",
+    "to": "py:builtin:len"
+  },
+  {
+    "from": "length",
+    "to": "py:builtin:len"
+  },
+  {
+    "from": "raneg",
+    "to": "py:builtin:range"
+  },
+  {
+    "from": "enuerate",
+    "to": "py:builtin:enumerate"
+  },
+  {
+    "from": "enumerte",
+    "to": "py:builtin:enumerate"
+  },
+  {
+    "from": "isintance",
+    "to": "py:builtin:isinstance"
+  },
+  {
+    "from": "isntance",
+    "to": "py:builtin:isinstance"
+  },
+  {
+    "from": "sroted",
+    "to": "py:builtin:sorted"
+  }
+]

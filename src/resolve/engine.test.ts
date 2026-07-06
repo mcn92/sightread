@@ -22,6 +22,7 @@ print(count)
 if __name__ == "__main__":
     print(f"total: {sum(nums)}")
 `;
+const TEST_ALIASES = [{ from: 'pritn', to: 'py:builtin:print' }];
 
 /** offset of the nth occurrence of `needle` (0-based), pointing at its first char */
 function at(needle: string, occurrence = 0): number {
@@ -116,7 +117,7 @@ describe('resolution (spec §6.2)', () => {
 
   it('uses trusted T1 aliases for obvious unbound builtin misspellings', () => {
     const code = 'pritn("hello")';
-    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, createTrustedAliasT1Search(PY_CONCEPTS));
+    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, createTrustedAliasT1Search(PY_CONCEPTS, TEST_ALIASES));
     const card = t1Engine.index(parsePython(code)).resolveAt(0, 'novice');
     expect(card?.kind).toBe('concept');
     if (card?.kind === 'concept') {
@@ -130,7 +131,7 @@ describe('resolution (spec §6.2)', () => {
 items = [1, 2, 3]
 totl += items[0]
 `;
-    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, createTrustedAliasT1Search(PY_CONCEPTS));
+    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, createTrustedAliasT1Search(PY_CONCEPTS, TEST_ALIASES));
     const localIndex = t1Engine.index(parsePython(code));
 
     const totalCard = localIndex.resolveAt(code.indexOf('totl +='), 'novice');

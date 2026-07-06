@@ -12,12 +12,12 @@ const LEVELS = ['novice', 'learning', 'comfortable'];
 const CATEGORIES = new Set(['syntax', 'builtin', 'stdlib', 'operator', 'pattern', 'idiom']);
 const GUARDS = new Set(['not_locally_bound', 'is_callee', 'inside', 'not_inside', 'text_in_pack_list']);
 const T1_EMBEDDING_MODEL = {
-  id: 'sightread-hash-embedding-v0',
+  id: 'sightread-lexical-semantic-v0',
   revision: '0',
-  dim: 128,
+  dim: 384,
   normalize: true,
 };
-const T1_THRESHOLD = 0.25;
+const T1_THRESHOLD = 0.4;
 
 function readJsonYaml(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -65,10 +65,16 @@ function hash(input) {
 
 function embedText(text) {
   const vector = new Float32Array(T1_EMBEDDING_MODEL.dim);
-  const tokens = String(text).toLowerCase().match(/[a-z_][a-z0-9_+-]*/g) ?? [];
+  const tokens = tokenize(text);
 
   for (const token of tokens) {
-    vector[hash(token) % vector.length] += 1;
+    addFeature(vector, `tok:${token}`, 1);
+    for (const part of token.split('_')) {
+      if (part.length >= 2) addFeature(vector, `part:${part}`, 0.5);
+    }
+    for (const gram of charNgrams(token, 3)) {
+      addFeature(vector, `tri:${gram}`, 0.3);
+    }
   }
 
   if (T1_EMBEDDING_MODEL.normalize) {
@@ -83,9 +89,28 @@ function embedText(text) {
   return vector;
 }
 
-function t1Text(concept) {
-  const body = concept.explanations.novice?.body ?? concept.explanations.learning?.body ?? '';
-  return `${concept.names.join('; ')} - ${concept.category}. ${body}`;
+function tokenize(text) {
+  return String(text).toLowerCase().match(/[a-z_][a-z0-9_+-]*/g) ?? [];
+}
+
+function charNgrams(token, size) {
+  const padded = `^${token}$`;
+  const grams = [];
+  for (let i = 0; i <= padded.length - size; i += 1) grams.push(padded.slice(i, i + size));
+  return grams;
+}
+
+function addFeature(vector, feature, weight) {
+  vector[hash(feature) % vector.length] += weight;
+}
+
+function t1Text(concept, aliases) {
+  return [
+    concept.names.join(' ').repeat(4),
+    aliases.join(' ').repeat(8),
+    concept.id.replaceAll(':', ' '),
+    concept.category,
+  ].join(' ');
 }
 
 function validatePackConfig(config) {
@@ -149,6 +174,23 @@ function validateConcept(concept, config) {
   }
   if (!['original', 'generated_reviewed'].includes(concept.provenance?.examples)) {
     throw new Error(`${concept.id}: provenance.examples is required`);
+  }
+}
+
+function validateAliases(aliases, ids) {
+  if (!Array.isArray(aliases)) throw new Error('aliases.yaml must be an array');
+  const seen = new Set();
+  for (const alias of aliases) {
+    if (!alias || typeof alias.from !== 'string' || typeof alias.to !== 'string') {
+      throw new Error('aliases.yaml entries need from and to strings');
+    }
+    if (!/^[a-z_][a-z0-9_+-]*$/.test(alias.from)) {
+      throw new Error(`aliases.yaml invalid alias ${alias.from}`);
+    }
+    if (!ids.has(alias.to)) throw new Error(`aliases.yaml points at unknown concept ${alias.to}`);
+    const key = `${alias.from}:${alias.to}`;
+    if (seen.has(key)) throw new Error(`aliases.yaml duplicate alias ${key}`);
+    seen.add(key);
   }
 }
 
@@ -219,7 +261,13 @@ async function buildPack() {
   concepts.sort((a, b) => a.id.localeCompare(b.id));
 
   const aliases = readJsonYaml(path.join(srcRoot, 'aliases.yaml'));
-  if (!Array.isArray(aliases)) throw new Error('aliases.yaml must be an array');
+  validateAliases(aliases, ids);
+  const aliasesByConcept = new Map();
+  for (const alias of aliases) {
+    const list = aliasesByConcept.get(alias.to);
+    if (list) list.push(alias.from);
+    else aliasesByConcept.set(alias.to, [alias.from]);
+  }
 
   fs.rmSync(outRoot, { recursive: true, force: true });
   fs.rmSync(publicRoot, { recursive: true, force: true });
@@ -241,7 +289,7 @@ async function buildPack() {
   const grammarTarget = path.join(outRoot, 'grammar.wasm');
   fs.copyFileSync(grammarSource, grammarTarget);
   const { index } = await Pancake.fromVectors(
-    concepts.map((concept) => embedText(t1Text(concept))),
+    concepts.map((concept) => embedText(t1Text(concept, aliasesByConcept.get(concept.id) ?? []))),
     {
       dim: T1_EMBEDDING_MODEL.dim,
       maxElements: concepts.length,

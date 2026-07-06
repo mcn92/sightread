@@ -1,6 +1,7 @@
 import type { Concept } from '../resolve/types';
 import type { LangConfig } from '../resolve/langConfig';
 import { loadT1Search, type T1Search } from '../resolve/t1';
+import type { T1Alias } from '../resolve/t1Aliases';
 
 interface PackFile {
   path: string;
@@ -58,6 +59,7 @@ async function loadPack(baseUrl: string): Promise<RuntimePack> {
 
   const conceptsPack = await fetchVerifiedJson<CompiledPack>(baseUrl, manifest, 'concepts.json');
   const concepts = await fetchVerifiedJson<Concept[]>(baseUrl, manifest, 'runtime-concepts.json');
+  const aliases = await fetchVerifiedJson<T1Alias[]>(baseUrl, manifest, 'aliases.json');
   const grammar = await fetchVerifiedBytes(baseUrl, manifest, 'grammar.wasm');
   const indexBytes = await fetchVerifiedBytes(baseUrl, manifest, 'index.pancake');
 
@@ -70,7 +72,7 @@ async function loadPack(baseUrl: string): Promise<RuntimePack> {
     concepts,
     config: toLangConfig(conceptsPack.config),
     grammar,
-    t1: await loadT1Search(indexBytes, manifest, concepts),
+    t1: await loadT1Search(indexBytes, manifest, concepts, aliases),
   };
 }
 

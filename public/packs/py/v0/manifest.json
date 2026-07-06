@@ -10,12 +10,12 @@
     "revision": "npm:tree-sitter-python@0.25.0"
   },
   "embedding_model": {
-    "id": "sightread-hash-embedding-v0",
+    "id": "sightread-lexical-semantic-v0",
     "revision": "0",
-    "dim": 128,
+    "dim": 384,
     "normalize": true
   },
-  "t1_threshold": 0.25,
+  "t1_threshold": 0.4,
   "files": [
     {
       "path": "concepts.json",
@@ -29,8 +29,8 @@
     },
     {
       "path": "aliases.json",
-      "bytes": 3,
-      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      "bytes": 737,
+      "sha256": "af83a36e73056b7f0a49623bebb8c27f88ab17c2033850893dc53668114e071e"
     },
     {
       "path": "grammar.wasm",
@@ -39,8 +39,8 @@
     },
     {
       "path": "index.pancake",
-      "bytes": 17984,
-      "sha256": "3f45f03424d40c4bd7727e27d3aa45212054eb42ae06858d879e77f6c9099418"
+      "bytes": 28992,
+      "sha256": "594bf31338aae2e43edac1163a3a1279bee45ee329e93593ea97cc66e7d3217c"
     }
   ],
   "signature": {

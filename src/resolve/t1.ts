@@ -1,7 +1,7 @@
 import Pancake, { type PancakeIndex } from 'pancake-wasm/web';
 import type { Concept } from './types';
 import { embedText } from './embedding';
-import { createTrustedAliasT1Search } from './t1Aliases';
+import { createTrustedAliasT1Search, type T1Alias } from './t1Aliases';
 
 interface T1ManifestConfig {
   embedding_model: { id: string; revision: string; dim: number; normalize: boolean } | null;
@@ -30,14 +30,19 @@ class PancakeT1Search implements T1Search {
   private index: PancakeIndex;
   private conceptsByOrdinal: Concept[];
   private threshold: number;
+  private aliases: T1Search;
 
-  constructor(index: PancakeIndex, conceptsByOrdinal: Concept[], threshold: number) {
+  constructor(index: PancakeIndex, conceptsByOrdinal: Concept[], threshold: number, aliases: T1Alias[]) {
     this.index = index;
     this.conceptsByOrdinal = conceptsByOrdinal;
     this.threshold = threshold;
+    this.aliases = createTrustedAliasT1Search(conceptsByOrdinal, aliases);
   }
 
   search(query: string): T1Hit | null {
+    const trustedTarget = this.aliases.search(query)?.concept;
+    if (!trustedTarget) return null;
+
     const [hit] = this.index.search(embedText(query), 1);
     if (!hit) return null;
 
@@ -45,6 +50,7 @@ class PancakeT1Search implements T1Search {
     if (score < this.threshold) return null;
 
     const concept = this.conceptsByOrdinal[hit.id];
+    if (concept?.id !== trustedTarget.id) return null;
     return concept ? { concept, score } : null;
   }
 }
@@ -60,7 +66,7 @@ class TrustedAliasThenPancakeT1Search implements T1Search {
   }
 
   search(query: string): T1Hit | null {
-    return this.aliases.search(query) ?? this.pancake.search(query);
+    return this.pancake.search(query) ?? this.aliases.search(query);
   }
 }
 
@@ -68,6 +74,7 @@ export async function loadT1Search(
   indexBytes: Uint8Array,
   manifest: T1ManifestConfig,
   conceptsByOrdinal: Concept[],
+  aliases: T1Alias[] = [],
 ): Promise<T1Search> {
   if (!manifest.embedding_model || manifest.t1_threshold == null || indexBytes.byteLength === 0) {
     return new DisabledT1Search();
@@ -91,11 +98,11 @@ export async function loadT1Search(
 
   if (manifest.embedding_model.id === 'sightread-hash-embedding-v0') {
     index.dispose();
-    return createTrustedAliasT1Search(conceptsByOrdinal);
+    return createTrustedAliasT1Search(conceptsByOrdinal, aliases);
   }
 
   return new TrustedAliasThenPancakeT1Search(
-    createTrustedAliasT1Search(conceptsByOrdinal),
-    new PancakeT1Search(index, conceptsByOrdinal, manifest.t1_threshold),
+    createTrustedAliasT1Search(conceptsByOrdinal, aliases),
+    new PancakeT1Search(index, conceptsByOrdinal, manifest.t1_threshold, aliases),
   );
 }
