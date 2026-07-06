@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Reader } from '../reader/Reader';
+import { Suspense, lazy, useState } from 'react';
 import { SAMPLE_CODE, useAppStore } from './store';
 import { LEVELS, type Level } from '../resolve/types';
+
+const Reader = lazy(() => import('../reader/Reader').then((module) => ({ default: module.Reader })));
 
 const LEVEL_LABEL: Record<Level, string> = {
   novice: 'New to this',
@@ -81,7 +82,9 @@ export function App() {
       )}
 
       <main className="sr-main">
-        <Reader />
+        <Suspense fallback={<div className="sr-reader sr-reader-loading">loading reader…</div>}>
+          <Reader />
+        </Suspense>
       </main>
 
       <footer className="sr-footer">Python only, for now. Your code never leaves this page.</footer>

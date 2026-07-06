@@ -160,6 +160,13 @@ body {
   overflow: hidden;
   min-height: 200px;
 }
+.sr-reader-loading {
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--sr-muted);
+}
 .sr-loading {
   position: absolute;
   inset: 0;
