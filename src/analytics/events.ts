@@ -152,8 +152,9 @@ function conceptIdForCard(card: ResolvedCard) {
 }
 
 function tierForCard(card: ResolvedCard): LookupTier {
-  if (card.kind === 'concept' || card.kind === 'shadow') return 't0';
-  return 'lexical';
+  if (card.kind === 'concept') return card.tier ?? 't0';
+  if (card.kind === 'shadow') return 't0';
+  return card.tier ?? 'lexical';
 }
 
 function bucketLineCount(code: string) {

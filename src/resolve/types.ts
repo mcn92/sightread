@@ -52,7 +52,7 @@ export interface Range {
 
 /** What a tap resolves to (design doc §7). */
 export type ResolvedCard =
-  | { kind: 'concept'; concept: Concept; range: Range }
+  | { kind: 'concept'; concept: Concept; range: Range; tier?: 't0' | 't1_hit' }
   | {
       kind: 'shadow'; // I5: a name shadows a known builtin — say so, never pretend
       name: string;
@@ -60,7 +60,7 @@ export type ResolvedCard =
       definitionLine: number;
       range: Range;
     }
-  | { kind: 'lexical'; text: string; nodeType: string; range: Range; definitionLine?: number };
+  | { kind: 'lexical'; text: string; nodeType: string; range: Range; definitionLine?: number; tier?: 'lexical' | 't1_miss' };
 
 export function levelAllows(concept: Concept, level: Level): boolean {
   if (!concept.maxLevel) return true;

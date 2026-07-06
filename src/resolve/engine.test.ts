@@ -86,6 +86,19 @@ describe('resolution (spec §6.2)', () => {
     }
   });
 
+  it('uses T1 before lexical fallback when no selector matches', () => {
+    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, {
+      enabled: true,
+      search: () => ({ concept: PY_CONCEPTS.find((concept) => concept.id === 'py:builtin:len')!, score: 0.9 }),
+    });
+    const card = t1Engine.index(parsePython(FIXTURE)).resolveAt(at('count', 1), 'novice');
+    expect(card?.kind).toBe('concept');
+    if (card?.kind === 'concept') {
+      expect(card.concept.id).toBe('py:builtin:len');
+      expect(card.tier).toBe('t1_hit');
+    }
+  });
+
   it('lets the __main__ idiom outrank the == operator (priority bands)', () => {
     const card = index.resolveAt(at('=='), 'novice');
     expect(card?.kind).toBe('concept');

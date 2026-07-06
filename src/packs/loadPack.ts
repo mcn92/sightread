@@ -1,5 +1,6 @@
 import type { Concept } from '../resolve/types';
 import type { LangConfig } from '../resolve/langConfig';
+import { loadT1Search, type T1Search } from '../resolve/t1';
 
 interface PackFile {
   path: string;
@@ -13,6 +14,8 @@ interface PackManifest {
   pack_version: number;
   min_app_version: string;
   skeleton?: boolean;
+  embedding_model: { id: string; revision: string; dim: number; normalize: boolean } | null;
+  t1_threshold: number | null;
   files: PackFile[];
   signature: { alg: string; key_id: string | null; sig: string | null };
 }
@@ -37,6 +40,7 @@ export interface RuntimePack {
   concepts: Concept[];
   config: LangConfig;
   grammar: Uint8Array;
+  t1: T1Search;
 }
 
 const PACK_BASE_URL = '/packs/py/v0';
@@ -55,6 +59,7 @@ async function loadPack(baseUrl: string): Promise<RuntimePack> {
   const conceptsPack = await fetchVerifiedJson<CompiledPack>(baseUrl, manifest, 'concepts.json');
   const concepts = await fetchVerifiedJson<Concept[]>(baseUrl, manifest, 'runtime-concepts.json');
   const grammar = await fetchVerifiedBytes(baseUrl, manifest, 'grammar.wasm');
+  const indexBytes = await fetchVerifiedBytes(baseUrl, manifest, 'index.pancake');
 
   if (conceptsPack.lang !== manifest.lang || conceptsPack.pack_version !== manifest.pack_version) {
     throw new Error('pack concepts metadata does not match manifest');
@@ -65,6 +70,7 @@ async function loadPack(baseUrl: string): Promise<RuntimePack> {
     concepts,
     config: toLangConfig(conceptsPack.config),
     grammar,
+    t1: await loadT1Search(indexBytes, manifest, concepts),
   };
 }
 
@@ -76,7 +82,7 @@ function verifyManifestSkeleton(manifest: PackManifest): void {
   if (manifest.signature.alg !== 'unsigned-skeleton' || manifest.skeleton !== true) {
     throw new Error('signed pack verification is not implemented in the M1 skeleton');
   }
-  for (const required of ['concepts.json', 'runtime-concepts.json', 'grammar.wasm']) {
+  for (const required of ['concepts.json', 'runtime-concepts.json', 'grammar.wasm', 'index.pancake']) {
     if (!manifest.files.some((file) => file.path === required)) {
       throw new Error(`pack manifest is missing ${required}`);
     }

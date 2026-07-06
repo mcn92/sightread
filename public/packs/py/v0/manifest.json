@@ -9,8 +9,13 @@
     "name": "tree-sitter-python",
     "revision": "npm:tree-sitter-python@0.25.0"
   },
-  "embedding_model": null,
-  "t1_threshold": null,
+  "embedding_model": {
+    "id": "sightread-hash-embedding-v0",
+    "revision": "0",
+    "dim": 128,
+    "normalize": true
+  },
+  "t1_threshold": 0.25,
   "files": [
     {
       "path": "concepts.json",
@@ -34,8 +39,8 @@
     },
     {
       "path": "index.pancake",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "bytes": 17984,
+      "sha256": "3f45f03424d40c4bd7727e27d3aa45212054eb42ae06858d879e77f6c9099418"
     }
   ],
   "signature": {

@@ -10,6 +10,7 @@ import type { Concept, Level, Range, ResolvedCard } from './types';
 import { levelAllows } from './types';
 import type { LangConfig } from './langConfig';
 import { buildBindingIndex, checkGuard, localBinding, type BindingIndex } from './guards';
+import type { T1Search } from './t1';
 
 interface CompiledSelector {
   concept: Concept;
@@ -31,9 +32,11 @@ interface Candidate {
 export class ResolverEngine {
   private compiled: CompiledSelector[] = [];
   private config: LangConfig;
+  private t1?: T1Search;
 
-  constructor(language: Language, concepts: Concept[], config: LangConfig) {
+  constructor(language: Language, concepts: Concept[], config: LangConfig, t1?: T1Search) {
     this.config = config;
+    this.t1 = t1;
     for (const concept of concepts) {
       for (const sel of concept.selectors) {
         let query: Query;
@@ -102,7 +105,7 @@ export class ResolverEngine {
         else byNode.set(target.id, [candidate]);
       }
     }
-    return new MatchIndex(tree, byNode, this.config, bindings);
+    return new MatchIndex(tree, byNode, this.config, bindings, this.t1);
   }
 }
 
@@ -111,12 +114,14 @@ export class MatchIndex {
   private byNode: Map<number, Candidate[]>;
   private config: LangConfig;
   private bindings: BindingIndex;
+  private t1?: T1Search;
 
-  constructor(tree: Tree, byNode: Map<number, Candidate[]>, config: LangConfig, bindings: BindingIndex) {
+  constructor(tree: Tree, byNode: Map<number, Candidate[]>, config: LangConfig, bindings: BindingIndex, t1?: T1Search) {
     this.tree = tree;
     this.byNode = byNode;
     this.config = config;
     this.bindings = bindings;
+    this.t1 = t1;
   }
 
   /** Every tappable range, for editor decorations (spec §6.6: one source of truth). */
@@ -185,10 +190,20 @@ export class MatchIndex {
           range: winner.range,
         };
       }
-      return { kind: 'concept', concept: winner.concept, range: winner.range };
+      return { kind: 'concept', concept: winner.concept, range: winner.range, tier: 't0' };
     }
 
-    // Step 6 (M0): no T1 yet — leaf tokens get a minimal lexical card, structure gets nothing.
+    const t1Hit = this.t1?.search(this.queryText(smallest));
+    if (t1Hit) {
+      return {
+        kind: 'concept',
+        concept: t1Hit.concept,
+        range: { from: smallest.startIndex, to: smallest.endIndex },
+        tier: 't1_hit',
+      };
+    }
+
+    // Step 6 fallback: leaf tokens get a minimal lexical card, structure gets nothing.
     if (smallest.childCount === 0 && smallest.text.trim().length > 0) {
       const binding = smallest.type === 'identifier' ? localBinding(smallest, this.bindings, this.config) : null;
       return {
@@ -197,6 +212,7 @@ export class MatchIndex {
         nodeType: smallest.type,
         range: { from: smallest.startIndex, to: smallest.endIndex },
         definitionLine: binding?.line,
+        tier: this.t1?.enabled ? 't1_miss' : 'lexical',
       };
     }
     return null;
@@ -209,5 +225,11 @@ export class MatchIndex {
       cur = cur.parent;
     }
     return false;
+  }
+
+  private queryText(node: Node): string {
+    const parent = node.parent;
+    const text = node.text.slice(0, 120);
+    return parent ? `${text} - ${node.type} inside ${parent.type}` : `${text} - ${node.type}`;
   }
 }

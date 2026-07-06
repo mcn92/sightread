@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import ts from 'typescript';
+import Pancake from 'pancake-wasm/node';
 
 const ROOT = process.cwd();
 const FORMAT_VERSION = '1.0';
@@ -10,6 +11,13 @@ const PACK_VERSION = 0;
 const LEVELS = ['novice', 'learning', 'comfortable'];
 const CATEGORIES = new Set(['syntax', 'builtin', 'stdlib', 'operator', 'pattern', 'idiom']);
 const GUARDS = new Set(['not_locally_bound', 'is_callee', 'inside', 'not_inside', 'text_in_pack_list']);
+const T1_EMBEDDING_MODEL = {
+  id: 'sightread-hash-embedding-v0',
+  revision: '0',
+  dim: 128,
+  normalize: true,
+};
+const T1_THRESHOLD = 0.25;
 
 function readJsonYaml(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -44,6 +52,40 @@ function wordCount(text) {
 
 function lineCount(text) {
   return String(text).split('\n').length;
+}
+
+function hash(input) {
+  let value = 2166136261;
+  for (let i = 0; i < input.length; i += 1) {
+    value ^= input.charCodeAt(i);
+    value = Math.imul(value, 16777619);
+  }
+  return value >>> 0;
+}
+
+function embedText(text) {
+  const vector = new Float32Array(T1_EMBEDDING_MODEL.dim);
+  const tokens = String(text).toLowerCase().match(/[a-z_][a-z0-9_+-]*/g) ?? [];
+
+  for (const token of tokens) {
+    vector[hash(token) % vector.length] += 1;
+  }
+
+  if (T1_EMBEDDING_MODEL.normalize) {
+    let norm = 0;
+    for (const value of vector) norm += value * value;
+    norm = Math.sqrt(norm);
+    if (norm > 0) {
+      for (let i = 0; i < vector.length; i += 1) vector[i] /= norm;
+    }
+  }
+
+  return vector;
+}
+
+function t1Text(concept) {
+  const body = concept.explanations.novice?.body ?? concept.explanations.learning?.body ?? '';
+  return `${concept.names.join('; ')} - ${concept.category}. ${body}`;
 }
 
 function validatePackConfig(config) {
@@ -159,7 +201,7 @@ function findConceptFiles(dir) {
   return files.sort();
 }
 
-function buildPack() {
+async function buildPack() {
   const packRoot = path.join(ROOT, 'packs/py');
   const srcRoot = path.join(packRoot, 'src');
   const outRoot = path.join(packRoot, 'build/v0');
@@ -198,7 +240,20 @@ function buildPack() {
   const grammarSource = path.join(ROOT, 'public/tree-sitter-python.wasm');
   const grammarTarget = path.join(outRoot, 'grammar.wasm');
   fs.copyFileSync(grammarSource, grammarTarget);
-  fs.writeFileSync(path.join(outRoot, 'index.pancake'), '');
+  const { index } = await Pancake.fromVectors(
+    concepts.map((concept) => embedText(t1Text(concept))),
+    {
+      dim: T1_EMBEDDING_MODEL.dim,
+      maxElements: concepts.length,
+      metric: 'cosine',
+      quantized: true,
+      M: 16,
+      efConstruction: 200,
+      efSearch: 100,
+    },
+  );
+  fs.writeFileSync(path.join(outRoot, 'index.pancake'), index.export());
+  index.dispose();
 
   const files = ['concepts.json', 'runtime-concepts.json', 'aliases.json', 'grammar.wasm', 'index.pancake'].map(
     (name) => {
@@ -215,8 +270,8 @@ function buildPack() {
     min_app_version: '0.0.0',
     skeleton: true,
     grammar: { name: 'tree-sitter-python', revision: 'npm:tree-sitter-python@0.25.0' },
-    embedding_model: null,
-    t1_threshold: null,
+    embedding_model: T1_EMBEDDING_MODEL,
+    t1_threshold: T1_THRESHOLD,
     files,
     signature: { alg: 'unsigned-skeleton', key_id: null, sig: null },
   });
@@ -280,5 +335,8 @@ function migrateM0() {
   console.log(`Migrated ${concepts.length} M0 concepts into ${path.relative(ROOT, conceptsRoot)}`);
 }
 
-if (process.argv.includes('--migrate-m0')) migrateM0();
-buildPack();
+if (process.argv.includes('--migrate-m0')) {
+  migrateM0();
+} else {
+  await buildPack();
+}

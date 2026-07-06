@@ -34,7 +34,9 @@ export function Card({ card, level, onClose, onShowConcept }: CardProps) {
       </button>
       {card.kind === 'concept' && (
         <>
-          <div className="sr-card-eyebrow">{CATEGORY_LABEL[card.concept.category]}</div>
+          <div className="sr-card-eyebrow">
+            {card.tier === 't1_hit' ? 'closest match' : CATEGORY_LABEL[card.concept.category]}
+          </div>
           <h2 className="sr-card-title">
             <mark>{card.concept.names[0]}</mark>
           </h2>

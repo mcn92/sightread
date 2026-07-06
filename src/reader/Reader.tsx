@@ -61,7 +61,7 @@ function getEngine() {
         grammar: pack.grammar,
       }).then((language) => ({
         language,
-        engine: new ResolverEngine(language, pack.concepts, pack.config),
+        engine: new ResolverEngine(language, pack.concepts, pack.config, pack.t1),
       })),
     );
   }
