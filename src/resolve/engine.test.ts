@@ -78,6 +78,14 @@ describe('resolution (spec §6.2)', () => {
     }
   });
 
+  it('includes the definition line for locally bound lexical identifiers', () => {
+    const card = index.resolveAt(at('count', 1), 'novice'); // `count` inside `print(count)`
+    expect(card?.kind).toBe('lexical');
+    if (card?.kind === 'lexical') {
+      expect(card.definitionLine).toBe(4);
+    }
+  });
+
   it('lets the __main__ idiom outrank the == operator (priority bands)', () => {
     const card = index.resolveAt(at('=='), 'novice');
     expect(card?.kind).toBe('concept');

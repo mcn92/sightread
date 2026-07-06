@@ -60,7 +60,7 @@ export type ResolvedCard =
       definitionLine: number;
       range: Range;
     }
-  | { kind: 'lexical'; text: string; nodeType: string; range: Range };
+  | { kind: 'lexical'; text: string; nodeType: string; range: Range; definitionLine?: number };
 
 export function levelAllows(concept: Concept, level: Level): boolean {
   if (!concept.maxLevel) return true;

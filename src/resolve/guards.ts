@@ -68,7 +68,7 @@ export function buildBindingIndex(tree: Tree, config: LangConfig): BindingIndex 
   return index;
 }
 
-function localBinding(node: Node, bindings: BindingIndex, config: LangConfig): BindingInfo | null {
+export function localBinding(node: Node, bindings: BindingIndex, config: LangConfig): BindingInfo | null {
   const name = node.text;
   let cur: Node | null = node;
   while (cur) {

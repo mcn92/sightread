@@ -81,10 +81,17 @@ export function Card({ card, level, onClose, onShowConcept }: CardProps) {
           <h2 className="sr-card-title">
             <mark>{card.text}</mark>
           </h2>
-          <p className="sr-card-body">
-            This is {FRIENDLY_NODE[card.nodeType] ?? `a ${card.nodeType.replace(/_/g, ' ')}`}.
-            Sightread doesn't have a full card for it yet.
-          </p>
+          {card.definitionLine ? (
+            <p className="sr-card-body">
+              This is a name defined in this file on line {card.definitionLine}. Sightread
+              doesn't have a full card for it yet.
+            </p>
+          ) : (
+            <p className="sr-card-body">
+              This is {FRIENDLY_NODE[card.nodeType] ?? `a ${card.nodeType.replace(/_/g, ' ')}`}.
+              Sightread doesn't have a full card for it yet.
+            </p>
+          )}
         </>
       )}
     </div>

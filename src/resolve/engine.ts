@@ -9,7 +9,7 @@ import { Query, type Language, type Node, type Tree } from 'web-tree-sitter';
 import type { Concept, Level, Range, ResolvedCard } from './types';
 import { levelAllows } from './types';
 import type { LangConfig } from './langConfig';
-import { buildBindingIndex, checkGuard } from './guards';
+import { buildBindingIndex, checkGuard, localBinding, type BindingIndex } from './guards';
 
 interface CompiledSelector {
   concept: Concept;
@@ -102,7 +102,7 @@ export class ResolverEngine {
         else byNode.set(target.id, [candidate]);
       }
     }
-    return new MatchIndex(tree, byNode, this.config);
+    return new MatchIndex(tree, byNode, this.config, bindings);
   }
 }
 
@@ -110,11 +110,13 @@ export class MatchIndex {
   private tree: Tree;
   private byNode: Map<number, Candidate[]>;
   private config: LangConfig;
+  private bindings: BindingIndex;
 
-  constructor(tree: Tree, byNode: Map<number, Candidate[]>, config: LangConfig) {
+  constructor(tree: Tree, byNode: Map<number, Candidate[]>, config: LangConfig, bindings: BindingIndex) {
     this.tree = tree;
     this.byNode = byNode;
     this.config = config;
+    this.bindings = bindings;
   }
 
   /** Every tappable range, for editor decorations (spec §6.6: one source of truth). */
@@ -188,11 +190,13 @@ export class MatchIndex {
 
     // Step 6 (M0): no T1 yet — leaf tokens get a minimal lexical card, structure gets nothing.
     if (smallest.childCount === 0 && smallest.text.trim().length > 0) {
+      const binding = smallest.type === 'identifier' ? localBinding(smallest, this.bindings, this.config) : null;
       return {
         kind: 'lexical',
         text: smallest.text.slice(0, 80),
         nodeType: smallest.type,
         range: { from: smallest.startIndex, to: smallest.endIndex },
+        definitionLine: binding?.line,
       };
     }
     return null;
