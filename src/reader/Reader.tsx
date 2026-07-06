@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { EditorState, StateEffect, StateField } from '@codemirror/state';
 import { Decoration, EditorView, type DecorationSet } from '@codemirror/view';
 import { python } from '@codemirror/lang-python';
@@ -70,7 +71,7 @@ function getEngine() {
 
 interface OpenCard {
   card: ResolvedCard;
-  /** wrapper-relative anchor of the tapped range */
+  /** viewport-relative anchor of the tapped range */
   anchor: { left: number; top: number; bottom: number };
 }
 
@@ -160,14 +161,13 @@ export function Reader({ surface = 'reader', onLookup }: ReaderProps) {
       recordLookup(resolved, surfaceRef.current, performance.now() - start);
       onLookupRef.current?.();
       const coords = v.coordsAtPos(resolved.range.from);
-      const wrapperBox = parent!.getBoundingClientRect();
       setOpen({
         card: resolved,
         anchor: coords
           ? {
-              left: coords.left - wrapperBox.left,
-              top: coords.top - wrapperBox.top,
-              bottom: coords.bottom - wrapperBox.top,
+              left: coords.left,
+              top: coords.top,
+              bottom: coords.bottom,
             }
           : { left: 16, top: 16, bottom: 32 },
       });
@@ -198,35 +198,37 @@ export function Reader({ surface = 'reader', onLookup }: ReaderProps) {
   }, []);
 
   const isNarrow = typeof window !== 'undefined' && window.innerWidth < 640;
+  const popoverHeight = typeof window !== 'undefined' ? Math.min(480, window.innerHeight - 32) : 480;
   const cardStyle: React.CSSProperties | undefined =
     open && !isNarrow
-      ? open.anchor.top > 240
+      ? open.anchor.bottom > window.innerHeight * 0.56
         ? {
-            position: 'absolute',
-            left: Math.max(8, Math.min(open.anchor.left, (wrapperRef.current?.clientWidth ?? 400) - 348)),
-            top: open.anchor.top - 10,
-            transform: 'translateY(-100%)',
+            position: 'fixed',
+            left: Math.max(8, Math.min(open.anchor.left, window.innerWidth - 348)),
+            top: Math.max(16, open.anchor.top - popoverHeight - 10),
           }
         : {
-            position: 'absolute',
-            left: Math.max(8, Math.min(open.anchor.left, (wrapperRef.current?.clientWidth ?? 400) - 348)),
-            top: open.anchor.bottom + 10,
+            position: 'fixed',
+            left: Math.max(8, Math.min(open.anchor.left, window.innerWidth - 348)),
+            top: Math.min(open.anchor.bottom + 10, window.innerHeight - popoverHeight - 16),
           }
       : undefined;
 
   return (
     <div className="sr-reader" data-surface={surface} ref={wrapperRef}>
       {!ready && <div className="sr-loading">warming up the reader…</div>}
-      {open && (
-        <div className={isNarrow ? 'sr-sheet' : 'sr-popover'} style={cardStyle}>
-          <Card
-            card={open.card}
-            level={level}
-            onClose={() => setOpen(null)}
-            onShowConcept={(card) => setOpen({ ...open, card })}
-          />
-        </div>
-      )}
+      {open &&
+        createPortal(
+          <div className={isNarrow ? 'sr-sheet' : 'sr-popover'} style={cardStyle}>
+            <Card
+              card={open.card}
+              level={level}
+              onClose={() => setOpen(null)}
+              onShowConcept={(card) => setOpen({ ...open, card })}
+            />
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

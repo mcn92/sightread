@@ -157,8 +157,11 @@ body {
   background: var(--sr-panel);
   border: 1px solid var(--sr-line);
   border-radius: 14px;
-  overflow: hidden;
   min-height: 200px;
+}
+.sr-reader .cm-editor {
+  border-radius: 14px;
+  overflow: hidden;
 }
 .sr-reader-loading {
   display: grid;
@@ -296,6 +299,11 @@ body {
   z-index: 30;
   width: 340px;
   max-width: calc(100% - 16px);
+  max-height: calc(100vh - 32px);
+}
+.sr-popover .sr-card {
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
 }
 .sr-sheet {
   position: fixed;

@@ -193,19 +193,20 @@ export class MatchIndex {
       return { kind: 'concept', concept: winner.concept, range: winner.range, tier: 't0' };
     }
 
-    const t1Hit = this.t1?.search(this.queryText(smallest));
-    if (t1Hit) {
-      return {
-        kind: 'concept',
-        concept: t1Hit.concept,
-        range: { from: smallest.startIndex, to: smallest.endIndex },
-        tier: 't1_hit',
-      };
-    }
-
     // Step 6 fallback: leaf tokens get a minimal lexical card, structure gets nothing.
     if (smallest.childCount === 0 && smallest.text.trim().length > 0) {
       const binding = smallest.type === 'identifier' ? localBinding(smallest, this.bindings, this.config) : null;
+      if (!binding) {
+        const t1Hit = this.t1?.search(this.queryText(smallest));
+        if (t1Hit) {
+          return {
+            kind: 'concept',
+            concept: t1Hit.concept,
+            range: { from: smallest.startIndex, to: smallest.endIndex },
+            tier: 't1_hit',
+          };
+        }
+      }
       return {
         kind: 'lexical',
         text: smallest.text.slice(0, 80),

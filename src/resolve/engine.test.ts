@@ -87,15 +87,29 @@ describe('resolution (spec §6.2)', () => {
   });
 
   it('uses T1 before lexical fallback when no selector matches', () => {
+    const code = 'mystery_call()';
     const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, {
       enabled: true,
       search: () => ({ concept: PY_CONCEPTS.find((concept) => concept.id === 'py:builtin:len')!, score: 0.9 }),
     });
-    const card = t1Engine.index(parsePython(FIXTURE)).resolveAt(at('count', 1), 'novice');
+    const card = t1Engine.index(parsePython(code)).resolveAt(0, 'novice');
     expect(card?.kind).toBe('concept');
     if (card?.kind === 'concept') {
       expect(card.concept.id).toBe('py:builtin:len');
       expect(card.tier).toBe('t1_hit');
+    }
+  });
+
+  it('keeps locally bound identifiers lexical instead of forcing a T1 closest match', () => {
+    const t1Engine = new ResolverEngine(language, PY_CONCEPTS, PY_CONFIG, {
+      enabled: true,
+      search: () => ({ concept: PY_CONCEPTS.find((concept) => concept.id === 'py:syntax:try-except')!, score: 0.9 }),
+    });
+    const card = t1Engine.index(parsePython(FIXTURE)).resolveAt(at('count', 1), 'novice');
+    expect(card?.kind).toBe('lexical');
+    if (card?.kind === 'lexical') {
+      expect(card.text).toBe('count');
+      expect(card.definitionLine).toBe(4);
     }
   });
 
