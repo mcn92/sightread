@@ -43,7 +43,7 @@ class PancakeT1Search implements T1Search {
     const trustedTarget = this.aliases.search(query)?.concept;
     if (!trustedTarget) return null;
 
-    const [hit] = this.index.search(embedText(query), 1);
+    const [hit] = this.index.search(embedText(queryToken(query)), 1);
     if (!hit) return null;
 
     const score = 1 - hit.distance;
@@ -53,6 +53,10 @@ class PancakeT1Search implements T1Search {
     if (concept?.id !== trustedTarget.id) return null;
     return concept ? { concept, score } : null;
   }
+}
+
+function queryToken(query: string): string {
+  return query.split(' - ', 1)[0] ?? query;
 }
 
 class TrustedAliasThenPancakeT1Search implements T1Search {

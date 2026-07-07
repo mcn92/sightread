@@ -17,7 +17,7 @@ const T1_EMBEDDING_MODEL = {
   dim: 384,
   normalize: true,
 };
-const T1_THRESHOLD = 0.4;
+const T1_THRESHOLD = 0.25;
 
 function readJsonYaml(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));

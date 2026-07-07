@@ -15,7 +15,7 @@
     "dim": 384,
     "normalize": true
   },
-  "t1_threshold": 0.4,
+  "t1_threshold": 0.25,
   "files": [
     {
       "path": "concepts.json",
@@ -29,8 +29,8 @@
     },
     {
       "path": "aliases.json",
-      "bytes": 737,
-      "sha256": "af83a36e73056b7f0a49623bebb8c27f88ab17c2033850893dc53668114e071e"
+      "bytes": 982,
+      "sha256": "65936ad7ed1d035a396c91f06bc0260a3ce4db3a4b36a46f1f292387067d49c1"
     },
     {
       "path": "grammar.wasm",
@@ -40,7 +40,7 @@
     {
       "path": "index.pancake",
       "bytes": 28992,
-      "sha256": "594bf31338aae2e43edac1163a3a1279bee45ee329e93593ea97cc66e7d3217c"
+      "sha256": "db3ddbcf39def0cf2c333358e08ffc860f4edb88c840aebbfdfc02163615ed8c"
     }
   ],
   "signature": {

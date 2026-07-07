@@ -4,6 +4,10 @@
     "to": "py:builtin:print"
   },
   {
+    "from": "prnit",
+    "to": "py:builtin:print"
+  },
+  {
     "from": "pritn",
     "to": "py:builtin:print"
   },
@@ -28,7 +32,15 @@
     "to": "py:builtin:range"
   },
   {
+    "from": "rnage",
+    "to": "py:builtin:range"
+  },
+  {
     "from": "enuerate",
+    "to": "py:builtin:enumerate"
+  },
+  {
+    "from": "enumrate",
     "to": "py:builtin:enumerate"
   },
   {
@@ -45,6 +57,10 @@
   },
   {
     "from": "sroted",
+    "to": "py:builtin:sorted"
+  },
+  {
+    "from": "sorded",
     "to": "py:builtin:sorted"
   }
 ]
